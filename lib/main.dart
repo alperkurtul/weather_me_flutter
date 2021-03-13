@@ -25,7 +25,7 @@ class _MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'WeatherME',
+      title: 'Weather ME',
       theme: ThemeData.dark().copyWith(
         primaryColor: Colors.white,
         textTheme: ThemeData.dark().textTheme.apply(

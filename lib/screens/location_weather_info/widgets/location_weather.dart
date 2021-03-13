@@ -300,7 +300,7 @@ class _LocationWeatherState extends State<LocationWeather> {
                           AnimatedContainer(
                             key: _keyAnimatedContainer,
                             height: _animatedContainerHeight,
-                            duration: Duration(milliseconds: 300),
+                            duration: Duration(milliseconds: 600),
                             curve: Curves.easeInOut,  //.fastOutSlowIn,
                             child: FittedBox(
                               child: Column(

@@ -168,4 +168,4 @@ XCODE ==> Runner ==> General
 
 ## SPLASH Page Background Color
 
-`#5A73EF`
+`#5A73EF` AAA

@@ -1,0 +1,1 @@
+enum ApplicationApiMode { OpenWeatherApi, WeatherMeApi }

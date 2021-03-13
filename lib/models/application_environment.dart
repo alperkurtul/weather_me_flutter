@@ -1,0 +1,1 @@
+enum ApplicationEnvironment { Local, Production }

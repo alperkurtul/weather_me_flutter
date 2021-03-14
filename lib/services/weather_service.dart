@@ -92,32 +92,52 @@ class WeatherService {
       return 'ERROR';
   }
 
-  String getWeatherConditionIcon(int condition) {
+  Map<dynamic, dynamic> getWeatherConditionIcon(int inCondition) {
     // https://www.piliapp.com/emoji/list/weather/
+    String icon;
+    int outCondition;
 
-    if (condition < 210) {
-      return '⛈'; // Thunder cloud and rain
-    } else if (condition < 300) {
-      return '🌩'; // Cloud with lightning
-    } else if (condition < 500) {
-      return '🌦'; // White sun behind cloud with rain
-    } else if (condition < 600) {
-      return '🌧'; // Cloud with rain
-    } else if (condition < 700) {
-      return '🌨'; // Cloud with snow
-    } else if (condition < 800) {
-      return '☁'; // Cloud   '🌫'; // Fog
-    } else if (condition == 800) {
-      return '☀'; // Black sun with rays
-    } else if (condition == 801) {
-      return '🌤'; // White sun with small cloud
-    } else if (condition <= 803) {
-      return '🌥'; // White sun behind cloud
-    } else if (condition == 804) {
-      return '☁'; // Cloud
+    if (inCondition < 210) {
+      icon = '⛈'; // Thunder cloud and rain
+      outCondition = 209;
+    } else if (inCondition < 300) {
+      icon = '🌩'; // Cloud with lightning
+      outCondition = 299;
+    } else if (inCondition < 500) {
+      icon = '🌦'; // White sun behind cloud with rain
+      outCondition = 499;
+    } else if (inCondition < 600) {
+      icon = '🌧'; // Cloud with rain
+      outCondition = 599;
+    } else if (inCondition < 700) {
+      icon = '🌨'; // Cloud with snow
+      outCondition = 699;
+    } else if (inCondition < 800) {
+      icon = '☁'; // Cloud   '🌫'; // Fog
+      outCondition = 804;   // 799;
+    } else if (inCondition == 800) {
+      icon = '☀'; // Black sun with rays
+      outCondition = 800;
+    } else if (inCondition == 801) {
+      icon = '🌤'; // White sun with small cloud
+      outCondition = 801;
+    } else if (inCondition <= 803) {
+      icon = '🌥'; // White sun behind cloud
+      outCondition = 803;
+    } else if (inCondition == 804) {
+      icon = '☁'; // Cloud
+      outCondition = 804;
     } else {
-      return '🤷‍';
+      icon = '🤷‍';
+      outCondition = inCondition;
     }
+
+    Map outMap = {
+      'icon' : icon,
+      'outCondition' : outCondition
+    };
+
+    return outMap;
 
     // '🌅'
     // '🌄'

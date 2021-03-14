@@ -363,6 +363,7 @@ class WeatherModel {
   }
 
   void _forecastDataConsolidation(WeatherService weatherService) {
+    //print(weatherService.forecastData);
     var forecastData = weatherService.forecastData['list'];
 
     final dateFormat01 = DateFormat('yyyy-MM-dd HH:mm:ss');
@@ -386,10 +387,10 @@ class WeatherModel {
 
     List<NextDayModel> nds = [];
 
+    List<Map<String, dynamic>> _idArray = [];
     double _temperatureMin = 1000;
     double _temperatureMax = -1000;
     double _temperatureTotal = 0;
-    int _idTotal = 0;
     int _temperatureCount = 0;
 
     int _len = forecastData.length;
@@ -410,16 +411,17 @@ class WeatherModel {
       _temperatureTotal = _temperatureTotal +
           double.parse(forecastData[i]['main']['temp'].toString());
 
-      _idTotal =
-          _idTotal + int.parse(forecastData[i]['weather'][0]['id'].toString());
+      _idProcess(weatherService, 'PROCESS_ADD',
+          forecastData[i]['weather'][0]['id'].toString(), _idArray);
 
       _temperatureCount++;
 
       if ((i == _len - 1) ||
           (forecastData[i]['dt_txt'].toString().substring(0, 10) !=
               forecastData[i + 1]['dt_txt'].toString().substring(0, 10))) {
+
         NextDayModel nd = NextDayModel();
-        nd.id = (_idTotal / _temperatureCount).toStringAsFixed(0);
+        nd.id = _idProcess(null, 'PROCESS_DECIDE', '', _idArray);
         nd.temp = (_temperatureTotal / _temperatureCount).toStringAsFixed(0);
         if (nd.temp == '-0') nd.temp = '0';
         nd.tempMin = _temperatureMin.toStringAsFixed(0);
@@ -435,13 +437,74 @@ class WeatherModel {
           nds.add(nd);
         }
 
+        _idArray = [];
         _temperatureMin = 1000;
         _temperatureMax = -1000;
         _temperatureTotal = 0;
-        _idTotal = 0;
         _temperatureCount = 0;
       }
     }
     this.nextDays = nds;
+  }
+
+  String _idProcess(WeatherService weatherService, String processType,
+      String id, List idArray) {
+    Map outMap;
+    String icon;
+
+    if (processType == 'PROCESS_ADD') {
+      outMap = weatherService.getWeatherConditionIcon(int.parse(id));
+      String outId = outMap['outCondition'].toString();
+      String outIcon = outMap['icon'];
+
+      int itemLocation = -1;
+      for (int index = 0; index < idArray.length; index++) {
+        if (idArray[index]['icon'] == outIcon) {
+          itemLocation = index;
+        }
+      }
+
+      if (itemLocation == -1) {
+        Map<String, dynamic> m = {
+          'id': outId,
+          'icon': outIcon,
+          'iconcount': 1,
+        };
+        idArray.add(m);
+      } else {
+        Map<String, dynamic> m = {
+          'id': outId,
+          'icon': outIcon,
+          'iconcount': int.parse(idArray[itemLocation]['iconcount'].toString()) + 1,
+        };
+        idArray.add(m);
+        idArray.removeAt(itemLocation);
+      }
+
+      return '';
+    }
+    if (processType == 'PROCESS_DECIDE') {
+
+      for(Map item in idArray) {
+        if (outMap == null) {
+          outMap = item;
+        } else {
+          if (item['iconcount'] == outMap['iconcount']) {
+            if (int.parse(item['id']) < int.parse(outMap['id'])) {
+              outMap = item;
+            }
+          } else if (item['iconcount'] > outMap['iconcount']) {
+            outMap = item;
+          }
+        }
+      }
+
+      if (outMap == null) {
+        return '';
+      } else {
+        return outMap['id'];
+      }
+
+    }
   }
 }

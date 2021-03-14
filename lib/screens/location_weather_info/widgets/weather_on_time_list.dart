@@ -25,7 +25,7 @@ class WeatherOnTimeList extends StatelessWidget {
               degree: int.parse(item.temp),
               icon: weatherService.getWeatherConditionIcon(
                 int.parse(item.id),
-              ),
+              )['icon'],
             );
           },
           itemCount: this.weatherInfo.nearFutures.length,

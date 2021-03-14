@@ -87,7 +87,8 @@ class _LocationWeatherState extends State<LocationWeather> {
           _animatedContainerHeight - (-details.delta.dy * 1);
       if (_animatedContainerHeight < 0.0) _animatedContainerHeight = 0.0;
       dynamic height = _getAnimatedContainerSizes();
-      if (height == 0.0) {
+      //if (height == 0.0) {
+      if (_animatedContainerHeight == 0.0) {
         _nextDayListOffset = _nextDayListOffset + (-details.delta.dy * 1);
         if (_nextDayListOffset > _listViewDefaultHeight) {
           _nextDayListOffset = _listViewDefaultHeight;
@@ -188,7 +189,7 @@ class _LocationWeatherState extends State<LocationWeather> {
                 flex: 3,
                 child: Text(
                   //'${item.id}',
-                  _weatherService.getWeatherConditionIcon(int.parse(item.id)),
+                  _weatherService.getWeatherConditionIcon(int.parse(item.id))['icon'],
                   style: TextStyle(fontSize: 35.0),
                 )),
             Expanded(
@@ -217,7 +218,7 @@ class _LocationWeatherState extends State<LocationWeather> {
             Expanded(
                 flex: 3,
                 child: Text(
-                  _weatherService.getWeatherConditionIcon(int.parse(item.id)),
+                  _weatherService.getWeatherConditionIcon(int.parse(item.id))['icon'],
                   style: TextStyle(fontSize: 35.0),
                 )),
             Expanded(
@@ -267,7 +268,7 @@ class _LocationWeatherState extends State<LocationWeather> {
                               children: [
                                 Text(
                                   _weatherService.getWeatherConditionIcon(
-                                      int.parse(weatherInfo.id)),
+                                      int.parse(weatherInfo.id))['icon'],
                                   style: StyleSettings.mainIconSize(context),
                                 ),
                                 SizedBox(
@@ -300,8 +301,8 @@ class _LocationWeatherState extends State<LocationWeather> {
                           AnimatedContainer(
                             key: _keyAnimatedContainer,
                             height: _animatedContainerHeight,
-                            duration: Duration(milliseconds: 600),
-                            curve: Curves.easeInOut,  //.fastOutSlowIn,
+                            duration: Duration(milliseconds: 0),
+                            curve: Curves.linear,  // .easeInOut,  //.fastOutSlowIn,
                             child: FittedBox(
                               child: Column(
                                 children: [

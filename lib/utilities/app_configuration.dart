@@ -51,7 +51,7 @@ class AppConfiguration {
             'http://192.168.0.80:8080/weatherme/v1/getlocationlist?locationname=';
       } else if (applicationEnvironment == ApplicationEnvironment.Production) {
         api =
-            'http://24.133.72.82:9090/weatherme/v1/getlocationlist?locationname=';
+            'http://24.133.72.100:9090/weatherme/v1/getlocationlist?locationname=';
       }
     }
     return api;
@@ -66,7 +66,7 @@ class AppConfiguration {
       if (applicationEnvironment == ApplicationEnvironment.Local) {
         api = 'http://192.168.0.80:8080/weatherme/v1/getcurrentweather/';
       } else if (applicationEnvironment == ApplicationEnvironment.Production) {
-        api = 'http://24.133.72.82:9090/weatherme/v1/getcurrentweather/';
+        api = 'http://24.133.72.100:9090/weatherme/v1/getcurrentweather/';
       }
     }
     return api;

@@ -206,8 +206,10 @@ class WeatherModel {
     }
     this.nearFutures = nfs;
 
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    final String formattedCurrentDate = formatter.format(DateTime.now());
+    int timezone =
+        int.parse(weatherData['timeZone'].toString());
+    final String formattedCurrentDate = UTILDateUtils.utcTimeInMillisecondsAsFormattedString(
+        'dd-MM-yyyy', timezone * 1000);
     int startIndex = 0;
     if (weatherData['nextDays'][0]['dtTxt'].toString().substring(0, 10) ==
         formattedCurrentDate) {
@@ -221,7 +223,9 @@ class WeatherModel {
         index < weatherData['nextDays'].length;
         index++) {
       var item = weatherData['nextDays'][index];
-      DateTime date = DateTime.parse(item['dtTxt']);
+      String strDate = item['dtTxt'].toString();
+      strDate = strDate.substring(6,10) + '-' + strDate.substring(3,5) + '-' + strDate.substring(0,2) + ' ' + strDate.substring(11);
+      DateTime date = DateTime.parse(strDate);
       String dayOfWeek = DateFormat('EEEE').format(date);
 
       String tmp = double.parse(item['temp'].toString()).toStringAsFixed(0);
@@ -450,7 +454,6 @@ class WeatherModel {
   String _idProcess(WeatherService weatherService, String processType,
       String id, List idArray) {
     Map outMap;
-    String icon;
 
     if (processType == 'PROCESS_ADD') {
       outMap = weatherService.getWeatherConditionIcon(int.parse(id));
@@ -459,7 +462,7 @@ class WeatherModel {
 
       int itemLocation = -1;
       for (int index = 0; index < idArray.length; index++) {
-        if (idArray[index]['icon'] == outIcon) {
+        if (idArray[index]['outCondition'] == outId) {
           itemLocation = index;
         }
       }
@@ -483,6 +486,7 @@ class WeatherModel {
 
       return '';
     }
+
     if (processType == 'PROCESS_DECIDE') {
 
       for(Map item in idArray) {

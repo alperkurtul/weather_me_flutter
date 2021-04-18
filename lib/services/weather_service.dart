@@ -18,6 +18,9 @@ class WeatherService {
       }
       networkHelper = NetworkHelper('$url${locationId.toString()}');
       weatherData = await networkHelper.getData();
+      if (AppConfiguration.apiMode == ApplicationApiMode.WeatherMeApi) {
+        forecastData = weatherData;
+      }
 
       if (AppConfiguration.apiMode == ApplicationApiMode.OpenWeatherApi) {
         url = AppConfiguration.apiForForecastWeatherByLocationIdApi();

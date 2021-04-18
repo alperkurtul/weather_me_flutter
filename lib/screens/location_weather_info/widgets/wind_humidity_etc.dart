@@ -139,7 +139,7 @@ class WindHumidityEtc extends StatelessWidget {
                               style: TextStyle(fontSize: 16.0))),
                       Container(
                         child: Text(
-                          '${weatherInfo.visibility} hPa',
+                          '${weatherInfo.pressure} hPa',
                           style: TextStyle(
                               fontSize: 19.0, fontWeight: FontWeight.bold),
                         ),

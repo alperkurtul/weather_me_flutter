@@ -6,7 +6,7 @@ DENEME 1
 (readme_assets/weather-me.mp4)
 
 DENEME 2
-(https://github.com/alperkurtul/weather_me_flutter/tree/dvl-test-home/readme_assets/weather-me.mp4)
+![AA](https://github.com/alperkurtul/weather_me_flutter/tree/dvl-test-home/readme_assets/weather-me.mp4)
 
 ## Getting Started
 

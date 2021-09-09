@@ -2,16 +2,6 @@
 
 A new Flutter application.
 
-DENEME 1
-(readme_assets/weather-me.mp4)
-
-DENEME 2
-![AA](https://github.com/alperkurtul/weather_me_flutter/tree/dvl-test-home/readme_assets/weather-me.mp4)
-
-DENEME 3
-<a href="readme_assets/weather-me.mp4"></a>
-
-DENEME 4
 https://user-images.githubusercontent.com/58986949/115314310-805b2780-a1a7-11eb-8558-648a367ea231.mp4
 
 DENEME 5

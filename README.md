@@ -8,6 +8,10 @@ DENEME 1
 DENEME 2
 ![AA](https://github.com/alperkurtul/weather_me_flutter/tree/dvl-test-home/readme_assets/weather-me.mp4)
 
+DENEME 2
+<a href="readme_assets/weather-me.mp4"></a>
+
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

@@ -2,6 +2,12 @@
 
 A new Flutter application.
 
+DENEME 1
+(readme_assets/weather-me.mov)
+
+DENEME 2
+https://github.com/alperkurtul/weather_me_flutter/tree/dvl-test-home/readme_assets/weather-me.mov
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

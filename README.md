@@ -2,7 +2,9 @@
 
 A new Flutter application.
 
-<a href="http://resume.alperkurtul.com/wp-content/uploads/2021/09/weather-me.mp4" target="_blank">Demo Video</a>
+<img src="readme_assets/weather-me-screen-shot.png" height="807"><br>
+<a href="http://resume.alperkurtul.com/wp-content/uploads/2021/09/weather-me.mp4" target="_blank">Demo Video</a><br>
+<a href="http://resume.alperkurtul.com/wp-content/uploads/2021/09/weather-me.mp4" target="_blank"><img src="readme_assets/weather-me-screen-shot.png" height="807">Demo Video</a><br>
 
 ## Getting Started
 

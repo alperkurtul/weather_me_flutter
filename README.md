@@ -2,18 +2,7 @@
 
 A new Flutter application.
 
-<a href="http://resume.alperkurtul.com/wp-content/uploads/2021/09/weather-me.mp4" target="_blank_">Demo Video</a>
-
-http://blog.alperkurtul.com/wp-content/uploads/yendif-gallery/aak_videogallery/goruntuarsivi/2012/04/MVI_4562.mp4
-
-https://github.com/alperkurtul/weather_me_flutter/tree/dvl-test-home/readme_assets/weather-me.mp4
-
-https://user-images.githubusercontent.com/58986949/115314310-805b2780-a1a7-11eb-8558-648a367ea231.mp4
-
-DENEME 5
-[![Watch the video](https://img.youtube.com/vi/T-D1KVIuvjA/maxresdefault.jpg)](https://youtu.be/T-D1KVIuvjA)
-
-
+<a href="http://resume.alperkurtul.com/wp-content/uploads/2021/09/weather-me.mp4" target="_blank">Demo Video</a>
 
 ## Getting Started
 

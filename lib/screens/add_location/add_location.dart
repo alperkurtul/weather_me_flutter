@@ -33,8 +33,9 @@ class _AddLocationState extends State<AddLocation> {
         locationList = [];
       });
     } else {
+      searchText = searchText.trimRight();
       WeatherService weatherService = WeatherService();
-      response = await weatherService.getLocationList(location: val);
+      response = await weatherService.getLocationList(location: searchText);
 
       if (response != 'ERROR') {
         if (AppConfiguration.apiMode == ApplicationApiMode.WeatherMeApi) {

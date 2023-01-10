@@ -90,7 +90,8 @@ class WeatherService {
       }
       networkHelper = NetworkHelper('$url$location');
 
-      return await networkHelper.getData();
+      dynamic data = await networkHelper.getData();
+      return data;
     } else
       return 'ERROR';
   }

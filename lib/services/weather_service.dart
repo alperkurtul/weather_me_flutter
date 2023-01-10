@@ -15,8 +15,10 @@ class WeatherService {
       if (AppConfiguration.apiMode == ApplicationApiMode.OpenWeatherApi) {
         url = url.replaceAll(
             '{apiKey}', '${AppConfiguration.myRegisteredApiKey}');
+        
       }
-      networkHelper = NetworkHelper('$url${locationId.toString()}');
+      Uri uri = Uri.parse('$url${locationId.toString()}');
+      networkHelper = NetworkHelper(uri);
       weatherData = await networkHelper.getData();
       if (AppConfiguration.apiMode == ApplicationApiMode.WeatherMeApi) {
         forecastData = weatherData;
@@ -26,7 +28,8 @@ class WeatherService {
         url = AppConfiguration.apiForForecastWeatherByLocationIdApi();
         url = url.replaceAll(
             '{apiKey}', '${AppConfiguration.myRegisteredApiKey}');
-        networkHelper = NetworkHelper('$url${locationId.toString()}');
+        uri = Uri.parse('$url${locationId.toString()}');
+        networkHelper = NetworkHelper(uri);
         forecastData = await networkHelper.getData();
       }
     } else
@@ -56,7 +59,8 @@ class WeatherService {
           url.replaceAll('{apiKey}', '${AppConfiguration.myRegisteredApiKey}');
       url = url.replaceAll('{lat}', '${geoLocation.latitude}');
       url = url.replaceAll('{lon}', '${geoLocation.longitude}');
-      networkHelper = NetworkHelper(url);
+      Uri uri = Uri.parse(url);
+      networkHelper = NetworkHelper(uri);
 
       var weatherData = await networkHelper.getData();
       try {
@@ -88,7 +92,8 @@ class WeatherService {
         url = url.replaceAll(
             '{apiKey}', '${AppConfiguration.commonLocationListApiKey}');
       }
-      networkHelper = NetworkHelper('$url$location');
+      Uri uri = Uri.parse('$url$location');
+      networkHelper = NetworkHelper(uri);
 
       dynamic data = await networkHelper.getData();
       return data;

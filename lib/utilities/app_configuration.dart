@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weather_me_flutter/models/application_api_mode.dart';
 import 'package:weather_me_flutter/models/application_environment.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppConfiguration {
   // 5 minutes
@@ -33,8 +34,13 @@ class AppConfiguration {
   static const ApplicationEnvironment applicationEnvironment =
       ApplicationEnvironment.Production;
 
-  static const myRegisteredApiKey = 'bcd5cca022de3d1a38619a0f353c5c77';
-  static const commonLocationListApiKey = '439d4b804bc8187953eb36d2a8c26a02';
+  static String get myRegisteredApiKey {
+    return dotenv.env['MYREGISTEREDAPIKEY'];
+  }
+
+  static String get commonLocationListApiKey {
+    return dotenv.env['COMMONLOCATIONLISTAPIKEY'];
+  }
 
 // For the use of finding location id with GeoLocation
   static const apiForCurrentWeatherByCoordApi =
@@ -47,11 +53,9 @@ class AppConfiguration {
           'https://openweathermap.org/data/2.5/find?&appid={apiKey}&units=metric&lang=en&q=';
     } else if (apiMode == ApplicationApiMode.WeatherMeApi) {
       if (applicationEnvironment == ApplicationEnvironment.Local) {
-        api =
-            'http://192.168.0.80:8080/weatherme/v1/getlocationlist?locationname=';
+        api = dotenv.env['API_FOR_LOCATIONDATA_WEATHERMEAPI_LOCAL'];
       } else if (applicationEnvironment == ApplicationEnvironment.Production) {
-        api =
-            'http://24.133.72.100:9090/weatherme/v1/getlocationlist?locationname=';
+        api = dotenv.env['API_FOR_LOCATIONDATA_WEATHERMEAPI_PRODUCTION'];
       }
     }
     return api;
@@ -64,9 +68,9 @@ class AppConfiguration {
           'https://api.openweathermap.org/data/2.5/weather?appid={apiKey}&units=metric&lang=en&id=';
     } else if (apiMode == ApplicationApiMode.WeatherMeApi) {
       if (applicationEnvironment == ApplicationEnvironment.Local) {
-        api = 'http://192.168.0.80:8080/weatherme/v1/getcurrentweather/';
+        api = dotenv.env['API_FOR_WEATHERDATA_WEATHERMEAPI_LOCAL'];
       } else if (applicationEnvironment == ApplicationEnvironment.Production) {
-        api = 'http://24.133.72.100:9090/weatherme/v1/getcurrentweather/';
+        api = dotenv.env['API_FOR_WEATHERDATA_WEATHERMEAPI_PRODUCTION'];
       }
     }
     return api;

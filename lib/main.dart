@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_me_flutter/states/locations.dart';
 import 'package:weather_me_flutter/screens/location_weather_info/location_weather_info.dart';
 
-void main() {
+Future main() async {
+  await dotenv.load(fileName: ".env");
   // disable Landscape mode
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(

@@ -7,8 +7,18 @@ class NetworkHelper {
   NetworkHelper(this.url);
 
   Future<dynamic> getData() async {
-    //print(url);
-    http.Response response = await http.get(url);
+    Map retMap = Map();
+
+    http.Response response;
+    try {
+      print('http.get TRY : ' + url.toString());
+      response = await http.get(url);
+      print('http.get SUCCESS : ' + url.toString());
+    } catch (e) {
+      print('http.get ERROR : ' + url.toString());
+      print('http.get ERROR : ' + e.message);
+      return retMap;
+    }
 
     if (response.statusCode == 200) {
       //print('HTTP request DONE with SUCCESS!');

@@ -15,7 +15,6 @@ class WeatherService {
       if (AppConfiguration.apiMode == ApplicationApiMode.OpenWeatherApi) {
         url = url.replaceAll(
             '{apiKey}', '${AppConfiguration.myRegisteredApiKey}');
-        
       }
       Uri uri = Uri.parse('$url${locationId.toString()}');
       networkHelper = NetworkHelper(uri);
@@ -123,7 +122,7 @@ class WeatherService {
       outCondition = 699;
     } else if (inCondition < 800) {
       icon = '☁'; // Cloud   '🌫'; // Fog
-      outCondition = 804;   // 799;
+      outCondition = 804; // 799;
     } else if (inCondition == 800) {
       icon = '☀'; // Black sun with rays
       outCondition = 800;
@@ -141,10 +140,7 @@ class WeatherService {
       outCondition = inCondition;
     }
 
-    Map outMap = {
-      'icon' : icon,
-      'outCondition' : outCondition
-    };
+    Map outMap = {'icon': icon, 'outCondition': outCondition};
 
     return outMap;
 

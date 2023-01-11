@@ -6,7 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class AppConfiguration {
   // 5 minutes
   static int get weatherDataValidDuration =>
-      DateTime.utc(1970, 1, 1, 0, 5, 0).millisecondsSinceEpoch; // 300000
+      DateTime.utc(1970, 1, 1, 0, 5, 0).millisecondsSinceEpoch; // 300000 milliseconds => 5 minutes
 
   static final BoxDecoration appBackgroundBoxDecoration = BoxDecoration(
     image: DecorationImage(
@@ -25,7 +25,7 @@ class AppConfiguration {
         Color(0xFF65ACFE),
         Color(0xFF5F8AF5),
         Color(0xFF5A73EF),
-        Color(0xFF565EEA),
+        Color(0xFF56BBBB),
       ],
     ),
   );

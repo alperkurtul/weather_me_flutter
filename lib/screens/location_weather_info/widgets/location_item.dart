@@ -15,7 +15,7 @@ class LocationItem extends StatelessWidget {
 
   LocationItem({this.locationName, this.locationIndex, this.selected = false});
 
-  void changeSelectedLocation(BuildContext context, int index) async {
+  /*void changeSelectedLocation(BuildContext context, int index) async {
     int locationId = int.parse(
         context.read<Locations>().locations[index].locationId.toString());
     await weatherService.getLocationWeatherDataByLocationId(
@@ -23,17 +23,18 @@ class LocationItem extends StatelessWidget {
     context
         .read<Locations>()
         .changeSelectedLocation(index, locateLocationList: false);
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(right: 5.0),
       child: GestureDetector(
-        onLongPress: (locationIndex == null || locationIndex == 0)
+        onTap: selected
             ? null
             : () {
-                context.read<Locations>().deleteFromLocation(locationIndex);
+                context.read<Locations>().changeSelectedLocation(locationIndex,
+                    locateWeatherList: true);
               },
         child: Container(
           decoration: BoxDecoration(
@@ -59,26 +60,49 @@ class LocationItem extends StatelessWidget {
                             ? Color(0xBB5F8AFF)
                             : Theme.of(context).primaryColor,
                         size: 30.0)
-                    : Row(
-                        children: [
-                          Text(
-                            '$locationName  ',
-                            style: TextStyle(
-                                fontSize: 20.0,
-                                color: selected
-                                    ? Color(0xFF565EEA)
-                                    : Theme.of(context).primaryColor),
+                    : !selected
+                        ? Row(
+                            children: [
+                              Text(
+                                '$locationName  ',
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    color: selected
+                                        ? Color(0xFF565EEA)
+                                        : Theme.of(context).primaryColor),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              Text(
+                                '$locationName  ',
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    color: selected
+                                        ? Color(0xFF565EEA)
+                                        : Theme.of(context).primaryColor),
+                              ),
+                              GestureDetector(
+                                onTap: (locationIndex == null ||
+                                        locationIndex == 0)
+                                    ? null
+                                    : () {
+                                        context
+                                            .read<Locations>()
+                                            .deleteFromLocation(locationIndex);
+                                      },
+                                child: Icon(
+                                    Platform.isIOS
+                                        ? CupertinoIcons.delete
+                                        : Icons.delete,
+                                    size: 27.0,
+                                    color: selected
+                                        ? Color(0xFF565EEA)
+                                        : Theme.of(context).primaryColor),
+                              ),
+                            ],
                           ),
-                          Icon(
-                              Platform.isIOS
-                                  ? CupertinoIcons.delete
-                                  : Icons.delete,
-                              size: 27.0,
-                              color: selected
-                                  ? Color(0xFF565EEA)
-                                  : Theme.of(context).primaryColor),
-                        ],
-                      ),
               ),
             ),
           ),

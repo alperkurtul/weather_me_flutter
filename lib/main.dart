@@ -12,6 +12,8 @@ Future main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
+  await dotenv.load(fileName: ".env");
+
   runApp(
     MultiProvider(
       providers: [

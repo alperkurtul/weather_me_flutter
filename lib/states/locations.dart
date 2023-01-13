@@ -309,12 +309,14 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
       }
     }
 
+    _initialDataGatheringCompleted = true;
+    notifyListeners();
+
     await _gatherLocationWeatherData(0, false);
     if (_selectedLocationIndex != 0)
       await _gatherLocationWeatherData(_selectedLocationIndex, false);
 
-    _initialDataGatheringCompleted = true;
-
+    //_initialDataGatheringCompleted = true;
     notifyListeners();
   }
 

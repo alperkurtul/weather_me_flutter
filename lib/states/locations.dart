@@ -70,7 +70,9 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   void gatherInitialData() {
-    if (!_initialDataGatheringCompleted) _getFromSharedPreferences();
+    if (!_initialDataGatheringCompleted) {
+      _getFromSharedPreferences();
+    }
   }
 
   Future<void> changeSelectedLocation(int locationIndex,

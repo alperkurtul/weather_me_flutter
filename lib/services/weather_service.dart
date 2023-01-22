@@ -74,7 +74,7 @@ class WeatherService {
       try {
         _locationModel.locationId = weatherData['id'].toString();
       } catch (err) {
-        print(err.toString());
+        print('$this (getCurrentLocationByCoord) : $err');
         _locationModel.locationId = '0';
       }
 

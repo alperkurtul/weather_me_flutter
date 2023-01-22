@@ -38,7 +38,8 @@ class NetworkHelper {
     }
 
     if (response == null) {
-      return retMap;
+      //return retMap;
+      return 'NOK';
     }
 
     if (response.statusCode == 200) {

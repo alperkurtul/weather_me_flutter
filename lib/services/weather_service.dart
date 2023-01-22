@@ -8,7 +8,7 @@ class WeatherService {
   dynamic weatherData;
   dynamic forecastData;
 
-  Future<void> getLocationWeatherDataByLocationId({int locationId}) async {
+  Future<dynamic> getLocationWeatherDataByLocationId({int locationId}) async {
     if (locationId > 0) {
       String url = AppConfiguration.apiForWeatherDataByLocationIdApi();
       NetworkHelper networkHelper;
@@ -19,6 +19,9 @@ class WeatherService {
       Uri uri = Uri.parse('$url${locationId.toString()}');
       networkHelper = NetworkHelper(uri);
       weatherData = await networkHelper.getData();
+      if (weatherData == 'NOK') {
+        weatherData = null;
+      }
       if (AppConfiguration.apiMode == ApplicationApiMode.WeatherMeApi) {
         forecastData = weatherData;
       }
@@ -30,9 +33,15 @@ class WeatherService {
         uri = Uri.parse('$url${locationId.toString()}');
         networkHelper = NetworkHelper(uri);
         forecastData = await networkHelper.getData();
+        if (forecastData == 'NOK') {
+          forecastData = null;
+        }
       }
-    } else
+    } else {
+      weatherData = null;
+      forecastData = null;
       return 'ERROR';
+    }
   }
 
   Future<LocationModel> getCurrentLocationByCoord(
@@ -96,8 +105,9 @@ class WeatherService {
 
       dynamic data = await networkHelper.getData();
       return data;
-    } else
+    } else {
       return 'ERROR';
+    }
   }
 
   Map<dynamic, dynamic> getWeatherConditionIcon(int inCondition) {

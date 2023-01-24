@@ -13,14 +13,14 @@ class GeoLocation {
 
   Future<void> getCurrentLocation() async {
     try {
-      print('TRYING to get CurrentLocation !');
+      //print('TRYING to get CurrentLocation !');
 
       final position = await Location().getLocation();
-      print('RECEIVED CurrentLocation !');
+      //print('RECEIVED CurrentLocation !');
 
       latitude = position.latitude;
       longitude = position.longitude;
-      print('latitude : $latitude  /  longitude : $longitude');
+      //print('latitude : $latitude  /  longitude : $longitude');
 
       locationRetrieved = 'OK';
     } catch (e) {

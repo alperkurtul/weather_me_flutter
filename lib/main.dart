@@ -19,12 +19,45 @@ Future main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => Locations()),
       ],
-      child: _MyApp(),
+      child: MyApp(),
     ),
   );
 }
 
-class _MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  bool _isInForeground = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    _isInForeground = state == AppLifecycleState.resumed;
+    //print('_isInForeground : $_isInForeground');
+    if (_isInForeground) {
+      context.read<Locations>().changeSelectedLocation(
+          context.read<Locations>().selectedLocationIndex,
+          locateLocationList: false,
+          locateWeatherList: false,
+          notify: false);
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

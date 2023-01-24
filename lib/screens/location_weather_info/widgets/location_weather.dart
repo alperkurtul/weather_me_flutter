@@ -120,7 +120,6 @@ class _LocationWeatherState extends State<LocationWeather> {
   @override
   Widget build(BuildContext context) {
     final Color _borderColor = Colors.transparent;
-    final WeatherService _weatherService = WeatherService();
 
     WeatherModel weatherInfo =
         context.read<Locations>().locations[widget.index].weatherData;
@@ -189,7 +188,8 @@ class _LocationWeatherState extends State<LocationWeather> {
                 flex: 3,
                 child: Text(
                   //'${item.id}',
-                  _weatherService.getWeatherConditionIcon(int.parse(item.id))['icon'],
+                  WeatherService.getWeatherConditionIcon(
+                      int.parse(item.id))['icon'],
                   style: TextStyle(fontSize: 35.0),
                 )),
             Expanded(
@@ -218,7 +218,8 @@ class _LocationWeatherState extends State<LocationWeather> {
             Expanded(
                 flex: 3,
                 child: Text(
-                  _weatherService.getWeatherConditionIcon(int.parse(item.id))['icon'],
+                  WeatherService.getWeatherConditionIcon(
+                      int.parse(item.id))['icon'],
                   style: TextStyle(fontSize: 35.0),
                 )),
             Expanded(
@@ -267,7 +268,7 @@ class _LocationWeatherState extends State<LocationWeather> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  _weatherService.getWeatherConditionIcon(
+                                  WeatherService.getWeatherConditionIcon(
                                       int.parse(weatherInfo.id))['icon'],
                                   style: StyleSettings.mainIconSize(context),
                                 ),
@@ -302,7 +303,7 @@ class _LocationWeatherState extends State<LocationWeather> {
                             key: _keyAnimatedContainer,
                             height: _animatedContainerHeight,
                             duration: Duration(milliseconds: 0),
-                            curve: Curves.linear,  // .easeInOut,  //.fastOutSlowIn,
+                            curve: Curves.linear,
                             child: FittedBox(
                               child: Column(
                                 children: [

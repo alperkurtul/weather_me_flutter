@@ -4,26 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_me_flutter/states/locations.dart';
-import 'package:weather_me_flutter/services/weather_service.dart';
 
 class LocationItem extends StatelessWidget {
   final String locationName;
   final int locationIndex;
   final bool selected;
 
-  final WeatherService weatherService = WeatherService();
-
   LocationItem({this.locationName, this.locationIndex, this.selected = false});
-
-  /*void changeSelectedLocation(BuildContext context, int index) async {
-    int locationId = int.parse(
-        context.read<Locations>().locations[index].locationId.toString());
-    await weatherService.getLocationWeatherDataByLocationId(
-        locationId: locationId);
-    context
-        .read<Locations>()
-        .changeSelectedLocation(index, locateLocationList: false);
-  }*/
 
   @override
   Widget build(BuildContext context) {

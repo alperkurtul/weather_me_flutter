@@ -20,6 +20,8 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
   Function _locateToItemInTheWeatherListView;
   Function _addLocationToAnimatedList;
   Function _deleteLocationFromAnimatedList;
+  BuildContext _context;
+  bool _isInternetConnectionOK;
 
   Locations() {
     _locations.add(LocationModel(
@@ -33,6 +35,7 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
     _deviceLocationEnabled = false;
     _initialDataGatheringCompleted = false;
     _selectedLocationIndex = 0;
+    _isInternetConnectionOK = true;
   }
 
   List<LocationModel> get locations => _locations;
@@ -43,10 +46,18 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
 
   int get selectedLocationIndex => _selectedLocationIndex;
 
+  BuildContext get context => _context;
+
+  bool get isInternetConnectionOK => _isInternetConnectionOK;
+
   //Function get locateToItemInTheLocationListView => _locateToItemInTheLocationListView;
   //Function get locateToItemInTheWeatherListView => _locateToItemInTheWeatherListView;
   //Function get addLocationToAnimatedList => _addLocationToAnimatedList;
   //Function get deleteLocationFromAnimatedList => _deleteLocationFromAnimatedList;
+
+  void setInternetConnectionStatus(bool connectionStatus) {
+    _isInternetConnectionOK = connectionStatus;
+  }
 
   void deviceLocationIsWorking() {
     _deviceLocationEnabled = true;
@@ -55,6 +66,10 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
 
   void setLocateToItemInTheLocationListView(Function func) {
     _locateToItemInTheLocationListView = func;
+  }
+
+  void setBuildContext(BuildContext ctx) {
+    _context = ctx;
   }
 
   void setLocateToItemInTheWeatherListView(Function func) {
@@ -69,8 +84,11 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
     _deleteLocationFromAnimatedList = func;
   }
 
-  void gatherInitialData() {
-    if (!_initialDataGatheringCompleted) _getFromSharedPreferences();
+  void gatherInitialData(BuildContext ctx) {
+    _context = ctx;
+    if (!_initialDataGatheringCompleted) {
+      _getFromSharedPreferences();
+    }
   }
 
   Future<void> changeSelectedLocation(int locationIndex,
@@ -79,6 +97,25 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
       bool locateWeatherList = false}) async {
     if (_selectedLocationIndex != locationIndex) {
       _selectedLocationIndex = locationIndex;
+
+      if (_locateToItemInTheLocationListView != null) {
+        if (locateLocationList) {
+          _locateToItemInTheLocationListView(locationIndex);
+          if (locateWeatherList) {
+            _locateToItemInTheWeatherListView(locationIndex);
+          }
+        }
+      }
+
+      _setSelectedLocationToSharedPreferences();
+
+      if (notify) {
+        notifyListeners();
+      }
+
+      _gatherLocationWeatherData(locationIndex, true);
+    } else {
+      //_selectedLocationIndex = locationIndex;
 
       if (_locateToItemInTheLocationListView != null) {
         if (locateLocationList) {
@@ -122,7 +159,8 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
     if (_selectedLocationIndex == 0) {
     } else {
       if (indexWillBeDeleted == _selectedLocationIndex) {
-        await changeSelectedLocation(0, notify: false, locateWeatherList: true);
+        await changeSelectedLocation(indexWillBeDeleted - 1,
+            notify: false, locateWeatherList: true);
       } else {
         if (_selectedLocationIndex < indexWillBeDeleted) {
         } else {
@@ -141,7 +179,6 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
       [int locationIndex, bool notify = true]) async {
     bool _dataGathered = false;
     int _startIndex, _endIndex;
-    WeatherService _weatherService = WeatherService();
 
     if (locationIndex == null) {
       _startIndex = 0;
@@ -156,7 +193,7 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
       if (index >= _startIndex && index <= _endIndex) {
         if (location.isGeoLocation) {
           LocationModel locationModel =
-              await _weatherService.getCurrentLocationByCoord();
+              await WeatherService.getCurrentLocationByCoord(_context);
           location.locationId = locationModel.locationId;
         }
 
@@ -168,19 +205,20 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
         int difference =
             nowAsUtcMilliSeconds - lastDataLoadedTimeAsUtcMilliSeconds;
         if ((location.isGeoLocation) || (difference > validity)) {
-          await _weatherService.getLocationWeatherDataByLocationId(
+          await WeatherService.getLocationWeatherDataByLocationId(_context,
               locationId: int.parse(location.locationId));
 
-          print(
-              'API request : YES for ${location.locationName} / difference: $difference / lastSaved: $lastDataLoadedTimeAsUtcMilliSeconds / now: $nowAsUtcMilliSeconds / param: $validity');
-          if (_weatherService.weatherData != null &&
-              _weatherService.forecastData != null) {
+          /*print(
+              'API request : YES for ${location.locationName} / difference: $difference / lastSaved: $lastDataLoadedTimeAsUtcMilliSeconds / now: $nowAsUtcMilliSeconds / param: $validity');*/
+          if (WeatherService.weatherData != null &&
+              WeatherService.forecastData != null) {
             _dataGathered = true;
-            _setWeatherInfo(_weatherService, index);
+            _setWeatherInfo(
+                WeatherService.weatherData, WeatherService.forecastData, index);
           }
         } else {
-          print(
-              'API request : NO for ${location.locationName} / difference: $difference / lastSaved: $lastDataLoadedTimeAsUtcMilliSeconds / now: $nowAsUtcMilliSeconds / param: $validity');
+          /*print(
+              'API request : NO for ${location.locationName} / difference: $difference / lastSaved: $lastDataLoadedTimeAsUtcMilliSeconds / now: $nowAsUtcMilliSeconds / param: $validity');*/
         }
       }
       index++;
@@ -194,8 +232,8 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
-  void _setWeatherInfo(WeatherService weatherService, int index) {
-    _locations[index].weatherData.setWeatherInfo(weatherService);
+  void _setWeatherInfo(dynamic weatherData, dynamic forecastData, int index) {
+    _locations[index].weatherData.setWeatherInfo(weatherData, forecastData);
   }
 
   Future<void> _setLocationsToSharedPreferences() async {

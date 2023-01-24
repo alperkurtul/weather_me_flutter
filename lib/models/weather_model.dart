@@ -110,19 +110,17 @@ class WeatherModel {
     };
   }
 
-  void setWeatherInfo(WeatherService weatherService) {
+  void setWeatherInfo(dynamic weatherData, dynamic forecastData) {
     if (AppConfiguration.apiMode == ApplicationApiMode.WeatherMeApi) {
-      _weatherDataFromWeatherMe(weatherService);
+      _weatherDataFromWeatherMe(weatherData);
       dataLoaded = true;
     } else if (AppConfiguration.apiMode == ApplicationApiMode.OpenWeatherApi) {
-      _weatherDataFromOpenWeather(weatherService);
+      _weatherDataFromOpenWeather(weatherData, forecastData);
       dataLoaded = true;
     }
   }
 
-  void _weatherDataFromWeatherMe(WeatherService weatherService) {
-    var weatherData = weatherService.weatherData;
-
+  void _weatherDataFromWeatherMe(dynamic weatherData) {
     this.id = weatherData['id'];
     this.main = weatherData['main'];
     this.description = weatherData['description'];
@@ -160,7 +158,7 @@ class WeatherModel {
 
     this.currentDateDisplay = this.weatherDataTime.substring(0, 2);
     this.dataLoadedUtcTime = (UTILDateUtils.utcTimeInMilliseconds).toString();
-    print('$locationName last saved at $dataLoadedUtcTime');
+    /*print('$locationName last saved at $dataLoadedUtcTime');*/
 
     var months = [
       'Jan',
@@ -206,10 +204,10 @@ class WeatherModel {
     }
     this.nearFutures = nfs;
 
-    int timezone =
-        int.parse(weatherData['timeZone'].toString());
-    final String formattedCurrentDate = UTILDateUtils.utcTimeInMillisecondsAsFormattedString(
-        'dd-MM-yyyy', timezone * 1000);
+    int timezone = int.parse(weatherData['timeZone'].toString());
+    final String formattedCurrentDate =
+        UTILDateUtils.utcTimeInMillisecondsAsFormattedString(
+            'dd-MM-yyyy', timezone * 1000);
     int startIndex = 0;
     if (weatherData['nextDays'][0]['dtTxt'].toString().substring(0, 10) ==
         formattedCurrentDate) {
@@ -224,7 +222,13 @@ class WeatherModel {
         index++) {
       var item = weatherData['nextDays'][index];
       String strDate = item['dtTxt'].toString();
-      strDate = strDate.substring(6,10) + '-' + strDate.substring(3,5) + '-' + strDate.substring(0,2) + ' ' + strDate.substring(11);
+      strDate = strDate.substring(6, 10) +
+          '-' +
+          strDate.substring(3, 5) +
+          '-' +
+          strDate.substring(0, 2) +
+          ' ' +
+          strDate.substring(11);
       DateTime date = DateTime.parse(strDate);
       String dayOfWeek = DateFormat('EEEE').format(date);
 
@@ -253,9 +257,7 @@ class WeatherModel {
     this.nextDays = nds;
   }
 
-  void _weatherDataFromOpenWeather(WeatherService weatherService) {
-    var weatherData = weatherService.weatherData;
-
+  void _weatherDataFromOpenWeather(dynamic weatherData, dynamic forecastData) {
     DateTime date;
     final dateFormat =
         DateFormat("dd-MM-yyyy HH:mm:ss"); //("dd-MM-yyyy HH:mm a");
@@ -309,7 +311,7 @@ class WeatherModel {
 
     this.currentDateDisplay = this.weatherDataTime.substring(0, 2);
     this.dataLoadedUtcTime = (UTILDateUtils.utcTimeInMilliseconds).toString();
-    print('$locationName last saved at $dataLoadedUtcTime');
+    /*print('$locationName last saved at $dataLoadedUtcTime');*/
 
     var months = [
       'Jan',
@@ -336,7 +338,6 @@ class WeatherModel {
     this.currentDateDisplay =
         DateFormat('EE').format(date) + ', ' + this.currentDateDisplay;
 
-    var forecastData = weatherService.forecastData;
     List<NearFutureModel> nfs = [];
     nfs.add(NearFutureModel(
       id: this.id.toString(),
@@ -363,25 +364,24 @@ class WeatherModel {
     }
     this.nearFutures = nfs;
 
-    _forecastDataConsolidation(weatherService);
+    _forecastDataConsolidation(forecastData);
   }
 
-  void _forecastDataConsolidation(WeatherService weatherService) {
-    //print(weatherService.forecastData);
-    var forecastData = weatherService.forecastData['list'];
+  void _forecastDataConsolidation(dynamic forecastData) {
+    //print(forecastData);
+    var forecastDataList = forecastData['list'];
 
     final dateFormat01 = DateFormat('yyyy-MM-dd HH:mm:ss');
     String formattedCurrentDate;
     dynamic timeInSeconds;
     int timezone;
 
-    timezone =
-        int.parse(weatherService.forecastData['city']['timezone'].toString());
+    timezone = int.parse(forecastData['city']['timezone'].toString());
 
     formattedCurrentDate = UTILDateUtils.utcTimeInMillisecondsAsFormattedString(
         'yyyy-MM-dd', timezone * 1000);
 
-    for (var item in forecastData) {
+    for (var item in forecastDataList) {
       timeInSeconds = int.parse(item['dt'].toString()) + timezone;
       String dt = dateFormat01.format(DateTime.fromMillisecondsSinceEpoch(
           timeInSeconds * 1000,
@@ -397,35 +397,34 @@ class WeatherModel {
     double _temperatureTotal = 0;
     int _temperatureCount = 0;
 
-    int _len = forecastData.length;
+    int _len = forecastDataList.length;
 
     for (int i = 0; i < _len; i++) {
-      if (double.parse(forecastData[i]['main']['temp_min'].toString()) <
+      if (double.parse(forecastDataList[i]['main']['temp_min'].toString()) <
           _temperatureMin) {
         _temperatureMin =
-            double.parse(forecastData[i]['main']['temp_min'].toString());
+            double.parse(forecastDataList[i]['main']['temp_min'].toString());
       }
 
-      if (double.parse(forecastData[i]['main']['temp_max'].toString()) >
+      if (double.parse(forecastDataList[i]['main']['temp_max'].toString()) >
           _temperatureMax) {
         _temperatureMax =
-            double.parse(forecastData[i]['main']['temp_max'].toString());
+            double.parse(forecastDataList[i]['main']['temp_max'].toString());
       }
 
       _temperatureTotal = _temperatureTotal +
-          double.parse(forecastData[i]['main']['temp'].toString());
+          double.parse(forecastDataList[i]['main']['temp'].toString());
 
-      _idProcess(weatherService, 'PROCESS_ADD',
-          forecastData[i]['weather'][0]['id'].toString(), _idArray);
+      _idProcess('PROCESS_ADD',
+          forecastDataList[i]['weather'][0]['id'].toString(), _idArray);
 
       _temperatureCount++;
 
       if ((i == _len - 1) ||
-          (forecastData[i]['dt_txt'].toString().substring(0, 10) !=
-              forecastData[i + 1]['dt_txt'].toString().substring(0, 10))) {
-
+          (forecastDataList[i]['dt_txt'].toString().substring(0, 10) !=
+              forecastDataList[i + 1]['dt_txt'].toString().substring(0, 10))) {
         NextDayModel nd = NextDayModel();
-        nd.id = _idProcess(null, 'PROCESS_DECIDE', '', _idArray);
+        nd.id = _idProcess('PROCESS_DECIDE', '', _idArray);
         nd.temp = (_temperatureTotal / _temperatureCount).toStringAsFixed(0);
         if (nd.temp == '-0') nd.temp = '0';
         nd.tempMin = _temperatureMin.toStringAsFixed(0);
@@ -433,10 +432,11 @@ class WeatherModel {
         nd.tempMax = _temperatureMax.toStringAsFixed(0);
         if (nd.tempMax == '-0') nd.tempMax = '0';
 
-        DateTime date = DateTime.parse(forecastData[i]['dt_txt'].toString());
+        DateTime date =
+            DateTime.parse(forecastDataList[i]['dt_txt'].toString());
         nd.dtTxt = DateFormat('EEEE').format(date);
 
-        if (forecastData[i]['dt_txt'].toString().substring(0, 10) !=
+        if (forecastDataList[i]['dt_txt'].toString().substring(0, 10) !=
             formattedCurrentDate) {
           nds.add(nd);
         }
@@ -451,12 +451,11 @@ class WeatherModel {
     this.nextDays = nds;
   }
 
-  String _idProcess(WeatherService weatherService, String processType,
-      String id, List idArray) {
+  String _idProcess(String processType, String id, List idArray) {
     Map outMap;
 
     if (processType == 'PROCESS_ADD') {
-      outMap = weatherService.getWeatherConditionIcon(int.parse(id));
+      outMap = WeatherService.getWeatherConditionIcon(int.parse(id));
       String outId = outMap['outCondition'].toString();
       String outIcon = outMap['icon'];
 
@@ -478,7 +477,8 @@ class WeatherModel {
         Map<String, dynamic> m = {
           'id': outId,
           'icon': outIcon,
-          'iconcount': int.parse(idArray[itemLocation]['iconcount'].toString()) + 1,
+          'iconcount':
+              int.parse(idArray[itemLocation]['iconcount'].toString()) + 1,
         };
         idArray.add(m);
         idArray.removeAt(itemLocation);
@@ -488,8 +488,7 @@ class WeatherModel {
     }
 
     if (processType == 'PROCESS_DECIDE') {
-
-      for(Map item in idArray) {
+      for (Map item in idArray) {
         if (outMap == null) {
           outMap = item;
         } else {
@@ -508,7 +507,6 @@ class WeatherModel {
       } else {
         return outMap['id'];
       }
-
     }
   }
 }

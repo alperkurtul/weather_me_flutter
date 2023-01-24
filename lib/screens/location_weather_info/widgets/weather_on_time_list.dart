@@ -6,8 +6,6 @@ import 'package:weather_me_flutter/services/weather_service.dart';
 class WeatherOnTimeList extends StatelessWidget {
   final WeatherModel weatherInfo;
 
-  final WeatherService weatherService = WeatherService();
-
   WeatherOnTimeList({this.weatherInfo});
 
   @override
@@ -23,7 +21,7 @@ class WeatherOnTimeList extends StatelessWidget {
             return WeatherOnTime(
               time: item.dtTxt,
               degree: int.parse(item.temp),
-              icon: weatherService.getWeatherConditionIcon(
+              icon: WeatherService.getWeatherConditionIcon(
                 int.parse(item.id),
               )['icon'],
             );

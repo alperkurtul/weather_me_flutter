@@ -46,7 +46,7 @@ class _LocationWeatherInfoState extends State<LocationWeatherInfo> {
     await geoLocation.getCurrentLocation();
     if (geoLocation.locationRetrieved == 'OK') {
       context.read<Locations>().deviceLocationIsWorking();
-      context.read<Locations>().gatherInitialData();
+      context.read<Locations>().gatherInitialData(context);
     } else {
       showAlertDialog(context, geoLocation.errorExplanation);
     }

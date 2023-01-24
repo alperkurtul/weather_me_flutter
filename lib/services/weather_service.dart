@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:weather_me_flutter/models/application_api_mode.dart';
 import 'package:weather_me_flutter/models/location_model.dart';
 import 'package:weather_me_flutter/services/geo_location.dart';
@@ -5,20 +6,29 @@ import 'package:weather_me_flutter/services/networking.dart';
 import 'package:weather_me_flutter/utilities/app_configuration.dart';
 
 class WeatherService {
-  dynamic weatherData;
-  dynamic forecastData;
+  static dynamic weatherData;
+  static dynamic forecastData;
+  static BuildContext context;
 
-  Future<void> getLocationWeatherDataByLocationId({int locationId}) async {
+  WeatherService(context);
+
+  static NetworkHelper networkHelper = NetworkHelper();
+
+  static Future<dynamic> getLocationWeatherDataByLocationId(BuildContext ctx,
+      {int locationId}) async {
+    networkHelper.context = ctx;
     if (locationId > 0) {
       String url = AppConfiguration.apiForWeatherDataByLocationIdApi();
-      NetworkHelper networkHelper;
       if (AppConfiguration.apiMode == ApplicationApiMode.OpenWeatherApi) {
         url = url.replaceAll(
             '{apiKey}', '${AppConfiguration.myRegisteredApiKey}');
       }
       Uri uri = Uri.parse('$url${locationId.toString()}');
-      networkHelper = NetworkHelper(uri);
+      networkHelper.url = uri;
       weatherData = await networkHelper.getData();
+      if (weatherData == 'NOK') {
+        weatherData = null;
+      }
       if (AppConfiguration.apiMode == ApplicationApiMode.WeatherMeApi) {
         forecastData = weatherData;
       }
@@ -28,44 +38,49 @@ class WeatherService {
         url = url.replaceAll(
             '{apiKey}', '${AppConfiguration.myRegisteredApiKey}');
         uri = Uri.parse('$url${locationId.toString()}');
-        networkHelper = NetworkHelper(uri);
+        networkHelper.url = uri;
         forecastData = await networkHelper.getData();
+        if (forecastData == 'NOK') {
+          forecastData = null;
+        }
       }
-    } else
+    } else {
+      weatherData = null;
+      forecastData = null;
       return 'ERROR';
+    }
   }
 
-  Future<LocationModel> getCurrentLocationByCoord(
+  static Future<LocationModel> getCurrentLocationByCoord(BuildContext ctx,
       {double lon, double lat}) async {
+    networkHelper.context = ctx;
     GeoLocation geoLocation = GeoLocation();
 
     if (lon != null && lat != null) {
-      print('PRESetted CurrentLocation !');
+      //print('PRESET CurrentLocation !');
       geoLocation.latitude = lat;
       geoLocation.longitude = lon;
-      print('latitude : ' + geoLocation.latitude.toString());
-      print('longitude : ' + geoLocation.longitude.toString());
+      //print('latitude : ' + geoLocation.latitude.toString());
+      //print('longitude : ' + geoLocation.longitude.toString());
     } else {
       await geoLocation.getCurrentLocation();
     }
 
     LocationModel _locationModel = LocationModel();
     if (geoLocation.longitude != null && geoLocation.latitude != null) {
-      NetworkHelper networkHelper;
-
       String url = AppConfiguration.apiForCurrentWeatherByCoordApi;
       url =
           url.replaceAll('{apiKey}', '${AppConfiguration.myRegisteredApiKey}');
       url = url.replaceAll('{lat}', '${geoLocation.latitude}');
       url = url.replaceAll('{lon}', '${geoLocation.longitude}');
       Uri uri = Uri.parse(url);
-      networkHelper = NetworkHelper(uri);
+      networkHelper.url = uri;
 
       var weatherData = await networkHelper.getData();
       try {
         _locationModel.locationId = weatherData['id'].toString();
       } catch (err) {
-        print(err.toString());
+        print('WeatherService.getCurrentLocationByCoord : $err');
         _locationModel.locationId = '0';
       }
 
@@ -76,7 +91,9 @@ class WeatherService {
     }
   }
 
-  Future<dynamic> getLocationList({String location}) async {
+  static Future<dynamic> getLocationList(BuildContext ctx,
+      {String location}) async {
+    networkHelper.context = ctx;
     int validLength;
     if (AppConfiguration.apiMode == ApplicationApiMode.WeatherMeApi) {
       validLength = 1;
@@ -85,22 +102,22 @@ class WeatherService {
     }
 
     if (location.length >= validLength) {
-      NetworkHelper networkHelper;
       String url = AppConfiguration.apiForLocationListApi();
       if (AppConfiguration.apiMode == ApplicationApiMode.OpenWeatherApi) {
         url = url.replaceAll(
             '{apiKey}', '${AppConfiguration.commonLocationListApiKey}');
       }
       Uri uri = Uri.parse('$url$location');
-      networkHelper = NetworkHelper(uri);
+      networkHelper.url = uri;
 
       dynamic data = await networkHelper.getData();
       return data;
-    } else
+    } else {
       return 'ERROR';
+    }
   }
 
-  Map<dynamic, dynamic> getWeatherConditionIcon(int inCondition) {
+  static Map<dynamic, dynamic> getWeatherConditionIcon(int inCondition) {
     // https://www.piliapp.com/emoji/list/weather/
     String icon;
     int outCondition;

@@ -42,7 +42,9 @@ class WeatherService {
         forecastData = await networkHelper.getData();
         if (forecastData == 'NOK') {
           forecastData = null;
+          return 'NOK';
         }
+        return 'OK';
       }
     } else {
       weatherData = null;
@@ -76,8 +78,8 @@ class WeatherService {
       Uri uri = Uri.parse(url);
       networkHelper.url = uri;
 
-      var weatherData = await networkHelper.getData();
       try {
+        var weatherData = await networkHelper.getData();
         _locationModel.locationId = weatherData['id'].toString();
       } catch (err) {
         print('WeatherService.getCurrentLocationByCoord : $err');
@@ -111,6 +113,10 @@ class WeatherService {
       networkHelper.url = uri;
 
       dynamic data = await networkHelper.getData();
+      if (data == 'NOK') {
+        data = null;
+        return 'NOK';
+      }
       return data;
     } else {
       return 'ERROR';

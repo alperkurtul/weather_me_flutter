@@ -1,12 +1,12 @@
 class NextDayModel {
-  String id;
-  String main;
-  String description;
-  String icon;
-  String temp;
-  String tempMin;
-  String tempMax;
-  String dtTxt;
+  String? id;
+  String? main;
+  String? description;
+  String? icon;
+  String? temp;
+  String? tempMin;
+  String? tempMax;
+  String? dtTxt;
 
   NextDayModel({
     this.id,

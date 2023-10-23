@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:weather_me_flutter/states/locations.dart';
 
 class LocationItem extends StatelessWidget {
-  final String locationName;
-  final int locationIndex;
+  final String? locationName;
+  final int? locationIndex;
   final bool selected;
 
   LocationItem({this.locationName, this.locationIndex, this.selected = false});
@@ -20,7 +20,7 @@ class LocationItem extends StatelessWidget {
         onTap: selected
             ? null
             : () {
-                context.read<Locations>().changeSelectedLocation(locationIndex,
+                context.read<Locations>().changeSelectedLocation(locationIndex!,
                     locateWeatherList: true);
               },
         child: Container(
@@ -77,7 +77,7 @@ class LocationItem extends StatelessWidget {
                                     : () {
                                         context
                                             .read<Locations>()
-                                            .deleteFromLocation(locationIndex);
+                                            .deleteFromLocation(locationIndex!);
                                       },
                                 child: Icon(
                                     Platform.isIOS

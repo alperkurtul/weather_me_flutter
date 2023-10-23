@@ -7,7 +7,7 @@ class LocationModel {
   String country;
   String longitude;
   String latitude;
-  WeatherModel weatherData;
+  WeatherModel? weatherData;
 
   LocationModel({
     this.isGeoLocation = false,
@@ -31,7 +31,7 @@ class LocationModel {
       'country': country,
       'longitude': longitude,
       'latitude': latitude,
-      'weatherData': weatherData.toMap(),
+      'weatherData': weatherData!.toMap(),
     };
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class WeatherOnTime extends StatelessWidget {
-  final String time;
-  final int degree;
+  final String? time;
+  final int? degree;
   final String icon;
   final bool selected;
 
@@ -26,7 +26,7 @@ class WeatherOnTime extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(time,
+              Text(time!,
                   style: TextStyle(
                       color: selected
                           ? Color(0xFF565EEA)

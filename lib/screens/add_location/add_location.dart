@@ -8,6 +8,7 @@ import 'package:weather_me_flutter/models/location_model.dart';
 import 'package:weather_me_flutter/services/weather_service.dart';
 import 'package:weather_me_flutter/states/locations.dart';
 import 'package:weather_me_flutter/utilities/app_configuration.dart';
+import 'package:weather_me_flutter/utilities/delay_and_trigger_utility.dart';
 
 class AddLocation extends StatefulWidget {
   @override
@@ -15,16 +16,27 @@ class AddLocation extends StatefulWidget {
 }
 
 class _AddLocationState extends State<AddLocation> {
-  String searchText;
+  String? searchText;
   List<dynamic> locationList = [];
+  String _latestVal = '';
+  DelayAndTriggerUtility _delayAndTriggerUtility = DelayAndTriggerUtility(800, 50);
 
-  Future<void> addNewLocation(String locationName, String locId) async {
+  Future<void> addNewLocation(String? locationName, String? locId) async {
     await context.read<Locations>().addNewLocation(
-        LocationModel(locationId: locId, locationName: locationName));
+        LocationModel(locationId: locId!, locationName: locationName!));
     Navigator.pop(context);
   }
 
-  void getLocationList(String val) async {
+  Future<void> _getLocationListWithDelayed(String val) async {
+    _latestVal = val;
+    bool isDelayPeriodEndedResult = await _delayAndTriggerUtility.isDelayPeriodEnded();
+    if (isDelayPeriodEndedResult) {
+      await _getLocationList(_latestVal);
+    }
+  }
+
+  Future<void> _getLocationList(String val) async {
+    //print('****** _getLocationList ***** : $val');
     searchText = val;
 
     var response;
@@ -33,11 +45,11 @@ class _AddLocationState extends State<AddLocation> {
         locationList = [];
       });
     } else {
-      searchText = searchText.trimRight();
+      searchText = searchText!.trimRight();
       response =
           await WeatherService.getLocationList(context, location: searchText);
 
-      if (response != 'ERROR') {
+      if (response != 'ERROR' && response != 'NOK') {
         if (AppConfiguration.apiMode == ApplicationApiMode.WeatherMeApi) {
           if (response['searchedKeyword'] == searchText) {
             setState(() {
@@ -50,12 +62,12 @@ class _AddLocationState extends State<AddLocation> {
             final responseList = response['list'];
             final locList = [];
             for (final response in responseList) {
-              if (searchText.length <= response['name'].toString().length) {
+              if (searchText!.length <= response['name'].toString().length) {
                 if (response['name']
                         .toString()
                         .toLowerCase()
-                        .substring(0, searchText.length) ==
-                    searchText.toLowerCase()) {
+                        .substring(0, searchText!.length) ==
+                    searchText!.toLowerCase()) {
                   locList.add(response);
                 }
               }
@@ -95,9 +107,9 @@ class _AddLocationState extends State<AddLocation> {
           itemCount: locationList.length,
           itemBuilder: (context, index) {
             final loc = locationList[index];
-            String locationId;
-            String locationName;
-            String country;
+            String? locationId;
+            String? locationName;
+            String? country;
             if (AppConfiguration.apiMode == ApplicationApiMode.WeatherMeApi) {
               locationId = loc['locationId'].toString();
               locationName = loc['locationName'].toString();
@@ -158,7 +170,7 @@ class _AddLocationState extends State<AddLocation> {
                 ),
                 child: TextField(
                   onChanged: (value) {
-                    getLocationList(value);
+                    _getLocationListWithDelayed(value);
                   },
                   autofocus: true,
                   style: TextStyle(color: Colors.grey),

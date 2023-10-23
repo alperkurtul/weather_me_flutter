@@ -8,23 +8,23 @@ import 'package:weather_me_flutter/utilities/app_configuration.dart';
 class WeatherService {
   static dynamic weatherData;
   static dynamic forecastData;
-  static BuildContext context;
+  //static BuildContext? context;
 
-  WeatherService(context);
+  //WeatherService(context);
 
   static NetworkHelper networkHelper = NetworkHelper();
 
-  static Future<dynamic> getLocationWeatherDataByLocationId(BuildContext ctx,
-      {int locationId}) async {
+  static Future<dynamic> getLocationWeatherDataByLocationId(BuildContext? ctx,
+      {required int locationId}) async {
     networkHelper.context = ctx;
     if (locationId > 0) {
-      String url = AppConfiguration.apiForWeatherDataByLocationIdApi();
+      String? url = AppConfiguration.apiForWeatherDataByLocationIdApi();
       if (AppConfiguration.apiMode == ApplicationApiMode.OpenWeatherApi) {
-        url = url.replaceAll(
+        url = url?.replaceAll(
             '{apiKey}', '${AppConfiguration.myRegisteredApiKey}');
       }
       Uri uri = Uri.parse('$url${locationId.toString()}');
-      networkHelper.url = uri;
+      networkHelper.uri = uri;
       weatherData = await networkHelper.getData();
       if (weatherData == 'NOK') {
         weatherData = null;
@@ -35,14 +35,16 @@ class WeatherService {
 
       if (AppConfiguration.apiMode == ApplicationApiMode.OpenWeatherApi) {
         url = AppConfiguration.apiForForecastWeatherByLocationIdApi();
-        url = url.replaceAll(
+        url = url?.replaceAll(
             '{apiKey}', '${AppConfiguration.myRegisteredApiKey}');
         uri = Uri.parse('$url${locationId.toString()}');
-        networkHelper.url = uri;
+        networkHelper.uri = uri;
         forecastData = await networkHelper.getData();
         if (forecastData == 'NOK') {
           forecastData = null;
+          return 'NOK';
         }
+        return 'OK';
       }
     } else {
       weatherData = null;
@@ -51,8 +53,8 @@ class WeatherService {
     }
   }
 
-  static Future<LocationModel> getCurrentLocationByCoord(BuildContext ctx,
-      {double lon, double lat}) async {
+  static Future<LocationModel> getCurrentLocationByCoord(BuildContext? ctx,
+      {double? lon, double? lat}) async {
     networkHelper.context = ctx;
     GeoLocation geoLocation = GeoLocation();
 
@@ -74,13 +76,13 @@ class WeatherService {
       url = url.replaceAll('{lat}', '${geoLocation.latitude}');
       url = url.replaceAll('{lon}', '${geoLocation.longitude}');
       Uri uri = Uri.parse(url);
-      networkHelper.url = uri;
+      networkHelper.uri = uri;
 
-      var weatherData = await networkHelper.getData();
       try {
+        var weatherData = await networkHelper.getData();
         _locationModel.locationId = weatherData['id'].toString();
       } catch (err) {
-        print('WeatherService.getCurrentLocationByCoord : $err');
+        //print('WeatherService.getCurrentLocationByCoord : $err');
         _locationModel.locationId = '0';
       }
 
@@ -92,25 +94,29 @@ class WeatherService {
   }
 
   static Future<dynamic> getLocationList(BuildContext ctx,
-      {String location}) async {
+      {String? location}) async {
     networkHelper.context = ctx;
-    int validLength;
+    int? validLength;
     if (AppConfiguration.apiMode == ApplicationApiMode.WeatherMeApi) {
       validLength = 1;
     } else if (AppConfiguration.apiMode == ApplicationApiMode.OpenWeatherApi) {
       validLength = 3;
     }
 
-    if (location.length >= validLength) {
-      String url = AppConfiguration.apiForLocationListApi();
+    if (location!.length >= validLength!) {
+      String? url = AppConfiguration.apiForLocationListApi();
       if (AppConfiguration.apiMode == ApplicationApiMode.OpenWeatherApi) {
-        url = url.replaceAll(
+        url = url?.replaceAll(
             '{apiKey}', '${AppConfiguration.commonLocationListApiKey}');
       }
       Uri uri = Uri.parse('$url$location');
-      networkHelper.url = uri;
+      networkHelper.uri = uri;
 
       dynamic data = await networkHelper.getData();
+      if (data == 'NOK') {
+        data = null;
+        return 'NOK';
+      }
       return data;
     } else {
       return 'ERROR';

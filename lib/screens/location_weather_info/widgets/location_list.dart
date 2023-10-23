@@ -9,7 +9,7 @@ class LocationList extends StatefulWidget {
 }
 
 class _LocationListState extends State<LocationList> {
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
   final GlobalKey<AnimatedListState> listKey = GlobalKey();
   final double _width = 135;
 
@@ -42,7 +42,7 @@ class _LocationListState extends State<LocationList> {
     //scrollController.jumpTo(_width * index);
   }
 
-  Widget buildAnimatedListItem(item, [selectedLocationIndex, int index]) {
+  Widget buildAnimatedListItem(item, [selectedLocationIndex, int? index]) {
     return LocationItem(
       locationName: item.locationName,
       locationIndex: index,
@@ -51,13 +51,13 @@ class _LocationListState extends State<LocationList> {
   }
 
   void addLocationToAnimatedList() {
-    listKey.currentState.insertItem(
+    listKey.currentState!.insertItem(
         context.read<Locations>().locations.length - 1,
         duration: Duration(milliseconds: 1500));
   }
 
   void deleteLocationFromAnimatedList(var removedItem, int index) {
-    listKey.currentState.removeItem(
+    listKey.currentState!.removeItem(
       index,
       (context, animation) {
         return FadeTransition(

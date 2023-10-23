@@ -34,11 +34,11 @@ class AppConfiguration {
   static const ApplicationEnvironment applicationEnvironment =
       ApplicationEnvironment.Production;
 
-  static String get myRegisteredApiKey {
+  static String? get myRegisteredApiKey {
     return dotenv.env['MYREGISTEREDAPIKEY'];
   }
 
-  static String get commonLocationListApiKey {
+  static String? get commonLocationListApiKey {
     return dotenv.env['COMMONLOCATIONLISTAPIKEY'];
   }
 
@@ -46,8 +46,8 @@ class AppConfiguration {
   static const apiForCurrentWeatherByCoordApi =
       'https://api.openweathermap.org/data/2.5/weather?appid={apiKey}&units=metric&lang=en&lat={lat}&lon={lon}';
 
-  static String apiForLocationListApi() {
-    String api;
+  static String? apiForLocationListApi() {
+    String? api;
     if (apiMode == ApplicationApiMode.OpenWeatherApi) {
       api =
           'https://openweathermap.org/data/2.5/find?&appid={apiKey}&units=metric&lang=en&q=';
@@ -61,8 +61,8 @@ class AppConfiguration {
     return api;
   }
 
-  static String apiForWeatherDataByLocationIdApi() {
-    String api;
+  static String? apiForWeatherDataByLocationIdApi() {
+    String? api;
     if (apiMode == ApplicationApiMode.OpenWeatherApi) {
       api =
           'https://api.openweathermap.org/data/2.5/weather?appid={apiKey}&units=metric&lang=en&id=';
@@ -76,8 +76,8 @@ class AppConfiguration {
     return api;
   }
 
-  static String apiForForecastWeatherByLocationIdApi() {
-    String api;
+  static String? apiForForecastWeatherByLocationIdApi() {
+    String? api;
     if (apiMode == ApplicationApiMode.OpenWeatherApi) {
       api =
           'https://api.openweathermap.org/data/2.5/forecast?appid={apiKey}&units=metric&lang=en&cnt=40&id=';

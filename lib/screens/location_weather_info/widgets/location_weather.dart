@@ -12,7 +12,7 @@ import 'package:weather_me_flutter/states/locations.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class LocationWeather extends StatefulWidget {
-  final int index;
+  final int? index;
 
   const LocationWeather({this.index});
 
@@ -27,15 +27,15 @@ class _LocationWeatherState extends State<LocationWeather> {
   final GlobalKey _keyListView1 = GlobalKey();
   final GlobalKey _keyListView2 = GlobalKey();
   final GlobalKey _keyListView3 = GlobalKey();
-  double _animatedContainerDefaultHeight;
-  double _listViewDefaultHeight;
-  bool _theNextDayIsVisible;
-  double _animatedContainerHeight;
-  double _nextDayListOffset = 0.0;
+  double? _animatedContainerDefaultHeight;
+  double? _listViewDefaultHeight;
+  bool? _theNextDayIsVisible;
+  double? _animatedContainerHeight;
+  double? _nextDayListOffset = 0.0;
 
   dynamic _getAnimatedContainerSizes() {
     return (_keyAnimatedContainer.currentContext != null)
-        ? _keyAnimatedContainer.currentContext.size.height
+        ? _keyAnimatedContainer.currentContext!.size!.height
         : null;
   }
 
@@ -46,25 +46,25 @@ class _LocationWeatherState extends State<LocationWeather> {
     Size _contextSize;
 
     if (_keyListView1.currentContext != null) {
-      _contextSize = _keyListView1.currentContext.size;
-      _listViewDefaultHeight = _listViewDefaultHeight + _contextSize.height;
+      _contextSize = _keyListView1.currentContext!.size!;
+      _listViewDefaultHeight = _listViewDefaultHeight! + _contextSize.height;
     }
 
     if (_keyListView2.currentContext != null) {
-      _contextSize = _keyListView2.currentContext.size;
-      _listViewDefaultHeight = _listViewDefaultHeight + _contextSize.height;
+      _contextSize = _keyListView2.currentContext!.size!;
+      _listViewDefaultHeight = _listViewDefaultHeight! + _contextSize.height;
     }
 
     if (_keyListView3.currentContext != null) {
-      _contextSize = _keyListView3.currentContext.size;
-      _listViewDefaultHeight = _listViewDefaultHeight + _contextSize.height;
+      _contextSize = _keyListView3.currentContext!.size!;
+      _listViewDefaultHeight = _listViewDefaultHeight! + _contextSize.height;
     }
 
     if (_keyListView.currentContext != null) {
-      _contextSize = _keyListView.currentContext.size;
-      if (_listViewDefaultHeight > _contextSize.height) {
-        _listViewDefaultHeight = _listViewDefaultHeight -
-            ((_listViewDefaultHeight - _contextSize.height) / 2);
+      _contextSize = _keyListView.currentContext!.size!;
+      if (_listViewDefaultHeight! > _contextSize.height) {
+        _listViewDefaultHeight = _listViewDefaultHeight! -
+            ((_listViewDefaultHeight! - _contextSize.height) / 2);
       }
     }
   }
@@ -84,28 +84,28 @@ class _LocationWeatherState extends State<LocationWeather> {
     if (details.delta.dy < 0) {
       // draging up
       _animatedContainerHeight =
-          _animatedContainerHeight - (-details.delta.dy * 1);
-      if (_animatedContainerHeight < 0.0) _animatedContainerHeight = 0.0;
+          _animatedContainerHeight! - (-details.delta.dy * 1);
+      if (_animatedContainerHeight! < 0.0) _animatedContainerHeight = 0.0;
       dynamic height = _getAnimatedContainerSizes();
       //if (height == 0.0) {
       if (_animatedContainerHeight == 0.0) {
-        _nextDayListOffset = _nextDayListOffset + (-details.delta.dy * 1);
-        if (_nextDayListOffset > _listViewDefaultHeight) {
+        _nextDayListOffset = _nextDayListOffset! + (-details.delta.dy * 1);
+        if (_nextDayListOffset! > _listViewDefaultHeight!) {
           _nextDayListOffset = _listViewDefaultHeight;
         }
-        _scrollController.jumpTo(_nextDayListOffset);
+        _scrollController.jumpTo(_nextDayListOffset!);
       }
     } else if (details.delta.dy > 0) {
       // draging down
-      if (!_theNextDayIsVisible) {
-        _nextDayListOffset = _nextDayListOffset - (details.delta.dy * 1);
-        if (_nextDayListOffset < 0.5) _nextDayListOffset = 0.0;
-        _scrollController.jumpTo(_nextDayListOffset);
+      if (!_theNextDayIsVisible!) {
+        _nextDayListOffset = _nextDayListOffset! - (details.delta.dy * 1);
+        if (_nextDayListOffset! < 0.5) _nextDayListOffset = 0.0;
+        _scrollController.jumpTo(_nextDayListOffset!);
         if (_nextDayListOffset == 0.0) _theNextDayIsVisible = true;
       } else {
         _animatedContainerHeight =
-            _animatedContainerHeight + (details.delta.dy * 1);
-        if (_animatedContainerHeight > _animatedContainerDefaultHeight) {
+            _animatedContainerHeight! + (details.delta.dy * 1);
+        if (_animatedContainerHeight! > _animatedContainerDefaultHeight!) {
           _animatedContainerHeight = _animatedContainerDefaultHeight;
         }
         if (_animatedContainerHeight == _animatedContainerDefaultHeight) {
@@ -121,10 +121,12 @@ class _LocationWeatherState extends State<LocationWeather> {
   Widget build(BuildContext context) {
     final Color _borderColor = Colors.transparent;
 
-    WeatherModel weatherInfo =
-        context.read<Locations>().locations[widget.index].weatherData;
-    List<NextDayModel> nextDays =
-        context.read<Locations>().locations[widget.index].weatherData.nextDays;
+    WeatherModel? weatherInfo =
+        context.read<Locations>().locations[widget.index!].weatherData;
+    List<NextDayModel>? nextDays =
+        context.read<Locations>().locations[widget.index!].weatherData!.nextDays;
+
+    String realTemperature = weatherInfo!.realTemperature;
 
     final double _availableWidth = MediaQuery.of(context).size.width -
         MediaQuery.of(context).padding.left -
@@ -143,7 +145,7 @@ class _LocationWeatherState extends State<LocationWeather> {
         Container(
           decoration: BoxDecoration(border: Border.all(color: _borderColor)),
           child: Center(
-            child: WeatherOnTimeList(weatherInfo: weatherInfo),
+            child: WeatherOnTimeList(weatherInfo: weatherInfo!),
           ),
         ),
         Padding(
@@ -157,7 +159,7 @@ class _LocationWeatherState extends State<LocationWeather> {
     );
 
     List<Widget> nextDaysList = [];
-    if (nextDays.length > 0) {
+    if (nextDays!.length > 0) {
       dynamic item = nextDays[0];
       nextDaysList.add(VisibilityDetector(
         key: Key('theNextDay'),
@@ -219,7 +221,7 @@ class _LocationWeatherState extends State<LocationWeather> {
                 flex: 3,
                 child: Text(
                   WeatherService.getWeatherConditionIcon(
-                      int.parse(item.id))['icon'],
+                      int.parse(item.id!))['icon'],
                   style: TextStyle(fontSize: 35.0),
                 )),
             Expanded(
@@ -315,7 +317,7 @@ class _LocationWeatherState extends State<LocationWeather> {
                                   ),
                                   Container(
                                     child: Text(
-                                        '${weatherInfo.realTemperature}°',
+                                        '$realTemperature°',
                                         style:
                                             StyleSettings.mainTemperatureSize(
                                                 context)),

@@ -6,13 +6,13 @@ import 'package:weather_me_flutter/models/weather_model.dart';
 import 'dart:math' as math;
 
 class WindHumidityEtc extends StatelessWidget {
-  final WeatherModel weatherInfo;
+  final WeatherModel? weatherInfo;
 
   WindHumidityEtc({this.weatherInfo});
 
   @override
   Widget build(BuildContext context) {
-    int windDeg = int.parse(weatherInfo.windDirectionDegree);
+    int windDeg = int.parse(weatherInfo!.windDirectionDegree);
     int angle = 180;
     angle = angle + windDeg;
 
@@ -31,7 +31,7 @@ class WindHumidityEtc extends StatelessWidget {
                               style: TextStyle(fontSize: 16.0))),
                       Container(
                         child: Text(
-                          '${weatherInfo.sunRise}',
+                          '${weatherInfo!.sunRise}',
                           style: TextStyle(
                               fontSize: 19.0, fontWeight: FontWeight.bold),
                         ),
@@ -50,7 +50,7 @@ class WindHumidityEtc extends StatelessWidget {
                               Text('Sunset', style: TextStyle(fontSize: 16.0))),
                       Container(
                         child: Text(
-                          '${weatherInfo.sunSet}',
+                          '${weatherInfo!.sunSet}',
                           style: TextStyle(
                               fontSize: 19.0, fontWeight: FontWeight.bold),
                         ),
@@ -79,7 +79,7 @@ class WindHumidityEtc extends StatelessWidget {
                               style: TextStyle(fontSize: 16.0))),
                       Container(
                         child: Text(
-                          '${weatherInfo.visibility} km',
+                          '${weatherInfo!.visibility} km',
                           style: TextStyle(
                               fontSize: 19.0, fontWeight: FontWeight.bold),
                         ),
@@ -108,7 +108,7 @@ class WindHumidityEtc extends StatelessWidget {
                                   size: 19.0),
                             ),
                             Text(
-                              '${weatherInfo.windSpeed} kmph',
+                              '${weatherInfo!.windSpeed} kmph',
                               style: TextStyle(
                                   fontSize: 19.0, fontWeight: FontWeight.bold),
                             ),
@@ -139,7 +139,7 @@ class WindHumidityEtc extends StatelessWidget {
                               style: TextStyle(fontSize: 16.0))),
                       Container(
                         child: Text(
-                          '${weatherInfo.pressure} hPa',
+                          '${weatherInfo!.pressure} hPa',
                           style: TextStyle(
                               fontSize: 19.0, fontWeight: FontWeight.bold),
                         ),
@@ -158,7 +158,7 @@ class WindHumidityEtc extends StatelessWidget {
                               style: TextStyle(fontSize: 16.0))),
                       Container(
                         child: Text(
-                          '${weatherInfo.humidity} %',
+                          '${weatherInfo!.humidity} %',
                           style: TextStyle(
                               fontSize: 19.0, fontWeight: FontWeight.bold),
                         ),

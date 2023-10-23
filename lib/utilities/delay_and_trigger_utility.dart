@@ -2,7 +2,7 @@ class DelayAndTriggerUtility {
   int _delayPeriodInMillisecond;
   int _delayTimeSteps;
 
-  int _remainingDelayPeriodInMillisecond;
+  int? _remainingDelayPeriodInMillisecond;
   bool _isDelayPeriodStarted = false;
 
   DelayAndTriggerUtility(this._delayPeriodInMillisecond, this._delayTimeSteps) {
@@ -20,9 +20,9 @@ class DelayAndTriggerUtility {
     }
 
     _isDelayPeriodStarted = true;
-    while (_remainingDelayPeriodInMillisecond > 0) {
+    while (_remainingDelayPeriodInMillisecond! > 0) {
       await Future.delayed(Duration(milliseconds: _delayTimeSteps));
-      _remainingDelayPeriodInMillisecond = _remainingDelayPeriodInMillisecond - _delayTimeSteps;
+      _remainingDelayPeriodInMillisecond = _remainingDelayPeriodInMillisecond! - _delayTimeSteps;
     }
     _isDelayPeriodStarted = false;
     reinitializeRemainingDelayPeriod();

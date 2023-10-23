@@ -22,7 +22,7 @@ class LocationWeatherInfo extends StatefulWidget {
 }
 
 class _LocationWeatherInfoState extends State<LocationWeatherInfo> {
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class _LocationWeatherInfoState extends State<LocationWeatherInfo> {
       context.read<Locations>().deviceLocationIsWorking();
       context.read<Locations>().gatherInitialData(context);
     } else {
-      showAlertDialog(context, geoLocation.errorExplanation);
+      showAlertDialog(context, geoLocation.errorExplanation!);
     }
   }
 

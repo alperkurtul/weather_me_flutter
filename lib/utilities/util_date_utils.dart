@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 class UTILDateUtils {
   static String utcTimeInMillisecondsAsFormattedString(
-      [String format, int timezoneInMilliseconds]) {
+      [String? format, int? timezoneInMilliseconds]) {
     // Current GMT time
     if (format == null || format == '') {
       format = 'yyyy-MM-dd HH:mm:ss';

@@ -4,9 +4,9 @@ class NearFutureModel {
   String dtTxt;
 
   NearFutureModel({
-    this.id,
-    this.temp,
-    this.dtTxt,
+    required this.id,
+    required this.temp,
+    required this.dtTxt,
   });
 
   dynamic toMap() {

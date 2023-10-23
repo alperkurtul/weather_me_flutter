@@ -30,8 +30,8 @@ class WeatherModel {
   String weatherDataTime = '';
   String currentDateDisplay = '';
   String dataLoadedUtcTime = '';
-  List<NearFutureModel> nearFutures = [];
-  List<NextDayModel> nextDays = [];
+  List<NearFutureModel>? nearFutures = [];
+  List<NextDayModel>? nextDays = [];
 
   WeatherModel({
     this.dataLoaded = false,
@@ -70,13 +70,13 @@ class WeatherModel {
 
   dynamic toMap() {
     List nearFutureList = [];
-    for (NearFutureModel nf in nearFutures) {
+    for (NearFutureModel nf in nearFutures!) {
       dynamic map = nf.toMap();
       nearFutureList.add(map);
     }
 
     List nextDayList = [];
-    for (NextDayModel nd in nextDays) {
+    for (NextDayModel nd in nextDays!) {
       dynamic map = nd.toMap();
       nextDayList.add(map);
     }
@@ -451,8 +451,8 @@ class WeatherModel {
     this.nextDays = nds;
   }
 
-  String _idProcess(String processType, String id, List idArray) {
-    Map outMap;
+  String? _idProcess(String processType, String id, List idArray) {
+    Map? outMap;
 
     if (processType == 'PROCESS_ADD') {
       outMap = WeatherService.getWeatherConditionIcon(int.parse(id));

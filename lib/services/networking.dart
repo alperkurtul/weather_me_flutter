@@ -8,17 +8,17 @@ import 'dart:convert';
 import 'package:weather_me_flutter/states/locations.dart';
 
 class NetworkHelper {
-  Uri url;
-  BuildContext context;
+  Uri? uri;
+  BuildContext? context;
 
-  NetworkHelper({this.context, this.url});
+  NetworkHelper({this.context, this.uri});
 
   Future<dynamic> getData() async {
-    http.Response response;
+    http.Response? response = null;
 
     int triedCount = 0;
     int maxTryCount = 5;
-    if (url.toString().contains('/2.5/find?')) {
+    if (uri!.toString().contains('/2.5/find?')) {
       maxTryCount = 1;
     }
     //print('maxTryCount : ' + maxTryCount.toString());
@@ -27,23 +27,30 @@ class NetworkHelper {
       //print('triedCount : ' + triedCount.toString());
       try {
         //print('http.get TRY : ' + url.toString());
-        response =
-            await http.get(url).timeout(Duration(seconds: 1 + triedCount));
+        response = await http.get(
+          uri!,
+          headers: {'Content-Type': 'application/json'},
+        ).timeout(Duration(seconds: 1 + triedCount));
         //print('http.get SUCCESS : ' + url.toString());
       } on TimeoutException catch (e) {
-        print(
-            'http.get ERROR TimeoutException : ${e.message} : ${url.toString()}');
+        /*print(
+            'http.get ERROR TimeoutException : ${e.message} : ${uri!.toString()}');*/
       } catch (e) {
-        print(
-            'http.get ERROR TimeoutException : ${e.message} : ${url.toString()}');
+        // print('http.get ERROR : ${e} : ${uri!.toString()}');
+        /*print(
+            'http.get ERROR : ${e.message} : ${uri.toString()}');*/
+        /*if (e.osError != null && e.osError.message != null) {
+          print(
+              'http.get ERROR : ${e.osError.message} : ${uri.toString()}');
+        }*/
       }
     }
 
     if (response == null) {
-      if (context.read<Locations>().isInternetConnectionOK) {
-        context.read<Locations>().setInternetConnectionStatus(false);
+      if (context!.read<Locations>().isInternetConnectionOK) {
+        context!.read<Locations>().setInternetConnectionStatus(false);
       }
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context!).showSnackBar(
         SnackBar(
           content: Text(
             'An error occurred while fetching weather data. Please check your Internet connection!',
@@ -53,8 +60,8 @@ class NetworkHelper {
       );
       return 'NOK';
     } else {
-      if (!context.read<Locations>().isInternetConnectionOK) {
-        context.read<Locations>().setInternetConnectionStatus(true);
+      if (!context!.read<Locations>().isInternetConnectionOK) {
+        context!.read<Locations>().setInternetConnectionStatus(true);
       }
     }
 
@@ -65,8 +72,8 @@ class NetworkHelper {
       //return jsonDecode(data);
       return json.decode(utf8.decode(response.bodyBytes));
     } else {
-      print(
-          'HTTP request DONE with ERROR! : ' + response.statusCode.toString());
+      /*print(
+          'HTTP request DONE with ERROR! : ' + response.statusCode.toString());*/
       return response.statusCode;
     }
   }

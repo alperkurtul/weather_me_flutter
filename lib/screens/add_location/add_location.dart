@@ -16,14 +16,14 @@ class AddLocation extends StatefulWidget {
 }
 
 class _AddLocationState extends State<AddLocation> {
-  String searchText;
+  String? searchText;
   List<dynamic> locationList = [];
   String _latestVal = '';
   DelayAndTriggerUtility _delayAndTriggerUtility = DelayAndTriggerUtility(800, 50);
 
-  Future<void> addNewLocation(String locationName, String locId) async {
+  Future<void> addNewLocation(String? locationName, String? locId) async {
     await context.read<Locations>().addNewLocation(
-        LocationModel(locationId: locId, locationName: locationName));
+        LocationModel(locationId: locId!, locationName: locationName!));
     Navigator.pop(context);
   }
 
@@ -45,7 +45,7 @@ class _AddLocationState extends State<AddLocation> {
         locationList = [];
       });
     } else {
-      searchText = searchText.trimRight();
+      searchText = searchText!.trimRight();
       response =
           await WeatherService.getLocationList(context, location: searchText);
 
@@ -62,12 +62,12 @@ class _AddLocationState extends State<AddLocation> {
             final responseList = response['list'];
             final locList = [];
             for (final response in responseList) {
-              if (searchText.length <= response['name'].toString().length) {
+              if (searchText!.length <= response['name'].toString().length) {
                 if (response['name']
                         .toString()
                         .toLowerCase()
-                        .substring(0, searchText.length) ==
-                    searchText.toLowerCase()) {
+                        .substring(0, searchText!.length) ==
+                    searchText!.toLowerCase()) {
                   locList.add(response);
                 }
               }
@@ -107,9 +107,9 @@ class _AddLocationState extends State<AddLocation> {
           itemCount: locationList.length,
           itemBuilder: (context, index) {
             final loc = locationList[index];
-            String locationId;
-            String locationName;
-            String country;
+            String? locationId;
+            String? locationName;
+            String? country;
             if (AppConfiguration.apiMode == ApplicationApiMode.WeatherMeApi) {
               locationId = loc['locationId'].toString();
               locationName = loc['locationName'].toString();

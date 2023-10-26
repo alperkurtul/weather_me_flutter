@@ -82,7 +82,7 @@ class WeatherService {
         var weatherData = await networkHelper.getData();
         _locationModel.locationId = weatherData['id'].toString();
       } catch (err) {
-        //print('WeatherService.getCurrentLocationByCoord : $err');
+        print('WeatherService.getCurrentLocationByCoord : $err');
         _locationModel.locationId = '0';
       }
 

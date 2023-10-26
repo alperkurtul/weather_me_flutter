@@ -42,13 +42,13 @@ class GeoLocation {
       final position = await location.getLocation();
       //print('RECEIVED CurrentLocation !');
 
-      latitude = position.latitude!;
-      longitude = position.longitude!;
+      latitude = position.latitude;
+      longitude = position.longitude;
       //print('latitude : $latitude  /  longitude : $longitude');
 
       locationRetrieved = 'OK';
     } catch (e) {
-      //print('CurrentLocation NOT RECEIVED : ' + e.toString());
+      print('CurrentLocation NOT RECEIVED : ' + e.toString());
       locationRetrieved = 'NOK';
       errorExplanation = e.toString();
     }

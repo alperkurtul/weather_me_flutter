@@ -33,10 +33,10 @@ class NetworkHelper {
         ).timeout(Duration(seconds: 1 + triedCount));
         //print('http.get SUCCESS : ' + url.toString());
       } on TimeoutException catch (e) {
-        /*print(
-            'http.get ERROR TimeoutException : ${e.message} : ${uri!.toString()}');*/
+        print(
+            'http.get ERROR TimeoutException : ${e.message} : ${uri!.toString()}');
       } catch (e) {
-        // print('http.get ERROR : ${e} : ${uri!.toString()}');
+        print('http.get ERROR : ${e} : ${uri!.toString()}');
         /*print(
             'http.get ERROR : ${e.message} : ${uri.toString()}');*/
         /*if (e.osError != null && e.osError.message != null) {
@@ -72,8 +72,8 @@ class NetworkHelper {
       //return jsonDecode(data);
       return json.decode(utf8.decode(response.bodyBytes));
     } else {
-      /*print(
-          'HTTP request DONE with ERROR! : ' + response.statusCode.toString());*/
+      print(
+          'HTTP request DONE with ERROR! : ' + response.statusCode.toString());
       return response.statusCode;
     }
   }

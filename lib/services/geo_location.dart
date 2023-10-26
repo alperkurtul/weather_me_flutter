@@ -18,7 +18,7 @@ class GeoLocation {
     PermissionStatus _permissionGranted;
     //LocationData _locationData;
 
-    _serviceEnabled = await location.serviceEnabled();
+    /*_serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
       if (!_serviceEnabled) {
@@ -32,7 +32,7 @@ class GeoLocation {
       if (_permissionGranted != PermissionStatus.granted) {
         return;
       }
-    }
+    }*/
 
     //_locationData = await location.getLocation();
 
@@ -48,7 +48,7 @@ class GeoLocation {
 
       locationRetrieved = 'OK';
     } catch (e) {
-      //print('CurrentLocation NOT RECEIVED : ' + e.toString());
+      print('CurrentLocation NOT RECEIVED : ' + e.toString());
       locationRetrieved = 'NOK';
       errorExplanation = e.toString();
     }

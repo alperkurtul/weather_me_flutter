@@ -18,7 +18,7 @@ class GeoLocation {
     PermissionStatus _permissionGranted;
     //LocationData _locationData;
 
-    /*_serviceEnabled = await location.serviceEnabled();
+    _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
       if (!_serviceEnabled) {
@@ -32,7 +32,7 @@ class GeoLocation {
       if (_permissionGranted != PermissionStatus.granted) {
         return;
       }
-    }*/
+    }
 
     //_locationData = await location.getLocation();
 
@@ -42,8 +42,8 @@ class GeoLocation {
       final position = await location.getLocation();
       //print('RECEIVED CurrentLocation !');
 
-      latitude = position.latitude!;
-      longitude = position.longitude!;
+      latitude = position.latitude;
+      longitude = position.longitude;
       //print('latitude : $latitude  /  longitude : $longitude');
 
       locationRetrieved = 'OK';

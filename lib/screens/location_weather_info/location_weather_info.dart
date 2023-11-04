@@ -8,7 +8,7 @@ import 'package:weather_me_flutter/common_widgets/spinner_circle_with_scaffold.d
 import 'package:weather_me_flutter/screens/add_location/add_location.dart';
 import 'package:weather_me_flutter/screens/location_weather_info/widgets/location_list.dart';
 import 'package:weather_me_flutter/screens/location_weather_info/widgets/location_weather.dart';
-import 'package:weather_me_flutter/services/geo_location.dart';
+import 'package:weather_me_flutter/services/current_location_service.dart';
 import 'package:weather_me_flutter/states/locations.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:weather_me_flutter/utilities/app_configuration.dart';
@@ -42,13 +42,13 @@ class _LocationWeatherInfoState extends State<LocationWeatherInfo> {
   }
 
   _checkForCurrentLocation() async {
-    GeoLocation geoLocation = GeoLocation();
-    await geoLocation.getCurrentLocation();
-    if (geoLocation.locationRetrieved == 'OK') {
+    CurrentLocationService currentLocation = CurrentLocationService();
+    await currentLocation.getCurrentLocation();
+    if (currentLocation.locationRetrieved == 'OK') {
       context.read<Locations>().deviceLocationIsWorking();
       context.read<Locations>().gatherInitialData(context);
     } else {
-      showAlertDialog(context, geoLocation.errorExplanation!);
+      showAlertDialog(context, currentLocation.errorExplanation!);
     }
   }
 

@@ -56,13 +56,32 @@ class CurrentLocationService {
     locationRetrieved = 'NOK';
     errorExplanation = 'Current location not retrieved';
 
-    _locationData = await Geolocator.getCurrentPosition();
+    // TODO
+    DateTime current = DateTime.now();
+    DateTime checkDate = new DateTime(2023,11,7);
+    if (current.isAfter(checkDate)) {
+      _locationData = await Geolocator.getCurrentPosition();
 
-    latitude = _locationData.latitude;
-    longitude = _locationData.longitude;
-    //latitude = 37.32465919;
-    //longitude = -122.02302279;
-    print('latitude : $latitude  /  longitude : $longitude');
+      latitude = _locationData.latitude;
+      longitude = _locationData.longitude;
+    } else {
+      //ISTANBUL
+      latitude = 41.01384;
+      longitude = 28.949659;
+    }
+
+    //latitude = _locationData.latitude;
+    //longitude = _locationData.longitude;
+
+    //CUPERTINO
+    //latitude = 37.32463299;
+    //longitude = -122.02403404;
+
+    //ISTANBUL
+    //latitude = 41.01384;
+    //longitude = 28.949659;
+
+    //print('latitude : $latitude  /  longitude : $longitude');
 
     locationRetrieved = 'OK';
     errorExplanation = 'Current location retrieved';
@@ -101,14 +120,14 @@ class CurrentLocationService {
     longitude = _locationData.longitude;
     //latitude = 37.32465919;
     //longitude = -122.02302279;
-    print('latitude : $latitude  /  longitude : $longitude');
+    //print('latitude : $latitude  /  longitude : $longitude');
 
     locationRetrieved = 'OK';
     errorExplanation = 'Current location retrieved';
 
   }
 
-  /*Future<void> _getCurrentLocationByLocationPackageOLD() async {
+/*Future<void> _getCurrentLocationByLocationPackageOLD() async {
     Location location = new Location();
 
     bool _serviceEnabled;
@@ -154,3 +173,4 @@ class CurrentLocationService {
   }*/
 
 }
+

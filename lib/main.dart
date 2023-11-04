@@ -66,8 +66,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       theme: ThemeData.dark().copyWith(
         primaryColor: Colors.white,
         textTheme: ThemeData.dark().textTheme.apply(
-              fontFamily: 'Roboto',
-            ),
+          fontFamily: 'Roboto',
+        ),
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor: Colors.black.withOpacity(0.8),
         ),

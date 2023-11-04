@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:weather_me_flutter/models/application_api_mode.dart';
 import 'package:weather_me_flutter/models/location_model.dart';
-import 'package:weather_me_flutter/services/geo_location.dart';
+import 'package:weather_me_flutter/services/current_location_service.dart';
 import 'package:weather_me_flutter/services/networking.dart';
 import 'package:weather_me_flutter/utilities/app_configuration.dart';
 
 class WeatherService {
   static dynamic weatherData;
   static dynamic forecastData;
+
   //static BuildContext? context;
 
   //WeatherService(context);
@@ -56,25 +57,26 @@ class WeatherService {
   static Future<LocationModel> getCurrentLocationByCoord(BuildContext? ctx,
       {double? lon, double? lat}) async {
     networkHelper.context = ctx;
-    GeoLocation geoLocation = GeoLocation();
+    CurrentLocationService currentLocationService = CurrentLocationService();
 
     if (lon != null && lat != null) {
       //print('PRESET CurrentLocation !');
-      geoLocation.latitude = lat;
-      geoLocation.longitude = lon;
-      //print('latitude : ' + geoLocation.latitude.toString());
-      //print('longitude : ' + geoLocation.longitude.toString());
+      currentLocationService.latitude = lat;
+      currentLocationService.longitude = lon;
+      //print('latitude : ' + currentLocationService.latitude.toString());
+      //print('longitude : ' + currentLocationService.longitude.toString());
     } else {
-      await geoLocation.getCurrentLocation();
+      await currentLocationService.getCurrentLocation();
     }
 
     LocationModel _locationModel = LocationModel();
-    if (geoLocation.longitude != null && geoLocation.latitude != null) {
+    if (currentLocationService.longitude != null &&
+        currentLocationService.latitude != null) {
       String url = AppConfiguration.apiForCurrentWeatherByCoordApi;
       url =
           url.replaceAll('{apiKey}', '${AppConfiguration.myRegisteredApiKey}');
-      url = url.replaceAll('{lat}', '${geoLocation.latitude}');
-      url = url.replaceAll('{lon}', '${geoLocation.longitude}');
+      url = url.replaceAll('{lat}', '${currentLocationService.latitude}');
+      url = url.replaceAll('{lon}', '${currentLocationService.longitude}');
       Uri uri = Uri.parse(url);
       networkHelper.uri = uri;
 

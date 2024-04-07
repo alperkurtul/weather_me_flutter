@@ -18,8 +18,11 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 version: 1.2.4+14
 
+# STABLE WITH flutter version "flutter_macos_arm64_3.13.9-stable" between ??-??-???? and 07-04-2024
+# STABLE WITH flutter version "flutter_macos_arm64_3.19.5-stable" between 07-04-2024 and ??-??-????
 environment:
-  sdk: '>=3.1.5 <4.0.0'
+  sdk: '>=3.3.3 <4.0.0'  # "for flutter_macos_arm64_3.19.5-stable" between 07-04-2024 and ??-??-????
+#  sdk: '>=3.1.5 <4.0.0'  # "for flutter_macos_arm64_3.13.9-stable" between ??-??-???? and 07-04-2024
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions

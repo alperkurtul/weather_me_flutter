@@ -195,20 +195,24 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
     int index = 0;
     for (LocationModel location in _locations!) {
       if (index >= _startIndex && index <= _endIndex) {
+        int validityDuration = 0;
+        int differenceDuration = 0;
+
         if (location.isGeoLocation) {
           LocationModel locationModel =
               await WeatherService.getCurrentLocationByCoord(_context);
           location.locationId = locationModel.locationId;
+        } else {
+          validityDuration = AppConfiguration.weatherDataValidDuration;
+          int nowAsUtcMilliSeconds = UTILDateUtils.utcTimeInMilliseconds;
+          int lastDataLoadedTimeAsUtcMilliSeconds =
+          int.parse(location.weatherData!.dataLoadedUtcTime);
+
+          differenceDuration =
+              nowAsUtcMilliSeconds - lastDataLoadedTimeAsUtcMilliSeconds;
         }
 
-        int validity = AppConfiguration.weatherDataValidDuration;
-        int nowAsUtcMilliSeconds = UTILDateUtils.utcTimeInMilliseconds;
-        int lastDataLoadedTimeAsUtcMilliSeconds =
-            int.parse(location.weatherData!.dataLoadedUtcTime);
-
-        int difference =
-            nowAsUtcMilliSeconds - lastDataLoadedTimeAsUtcMilliSeconds;
-        if ((location.isGeoLocation) || (difference > validity)) {
+        if ((location.isGeoLocation) || (differenceDuration > validityDuration)) {
           await WeatherService.getLocationWeatherDataByLocationId(_context,
               locationId: int.parse(location.locationId));
 
@@ -243,18 +247,22 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
   Future<void> _setLocationsToSharedPreferences() async {
     List locationsMap = _locationsToMap();
 
-    SharedPreferences _sharedPrefs = await SharedPreferences.getInstance();
-    if (locationsMap.length == 0) {
-      await _sharedPrefs.remove('locations');
-    } else {
-      String locationsString = json.encode(locationsMap);
-      await _sharedPrefs.setString('locations', locationsString);
+    if (_initialDataGatheringCompleted!) {
+      SharedPreferences _sharedPrefs = await SharedPreferences.getInstance();
+      if (locationsMap.length == 0) {
+        await _sharedPrefs.remove('locations');
+      } else {
+        String locationsString = json.encode(locationsMap);
+        await _sharedPrefs.setString('locations', locationsString);
+      }
     }
   }
 
   Future<void> _setSelectedLocationToSharedPreferences() async {
-    SharedPreferences _sharedPrefs = await SharedPreferences.getInstance();
-    await _sharedPrefs.setInt('selectedLocationIndex', _selectedLocationIndex!);
+    if (_initialDataGatheringCompleted!) {
+      SharedPreferences _sharedPrefs = await SharedPreferences.getInstance();
+      await _sharedPrefs.setInt('selectedLocationIndex', _selectedLocationIndex!);
+    }
   }
 
   Future<void> _getFromSharedPreferences() async {

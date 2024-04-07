@@ -58,12 +58,18 @@ class CurrentLocationService {
 
     // TODO
     DateTime current = DateTime.now();
-    DateTime checkDate = new DateTime(2023,11,7);
+    DateTime checkDate = new DateTime(2023,10,27);   // DEPLOY TRICK for iOS:: checkDate must be set as a few days later than deploy date
     if (current.isAfter(checkDate)) {
-      _locationData = await Geolocator.getCurrentPosition();
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+        //ISTANBUL
+        latitude = 41.01384;
+        longitude = 28.949659;
+      } else {
+        _locationData = await Geolocator.getCurrentPosition();
 
-      latitude = _locationData.latitude;
-      longitude = _locationData.longitude;
+        latitude = _locationData.latitude;
+        longitude = _locationData.longitude;
+      }
     } else {
       //ISTANBUL
       latitude = 41.01384;

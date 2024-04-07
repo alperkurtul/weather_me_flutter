@@ -188,9 +188,7 @@ class _LocationWeatherInfoState extends State<LocationWeatherInfo> {
                                         onTap: showCurrentLocationWeatherData,
                                         child: Container(
                                             decoration: BoxDecoration(
-                                              color: (context
-                                                          .read<Locations>()
-                                                          .selectedLocationIndex ==
+                                              color: (_selectedIndex ==
                                                       0)
                                                   ? Theme.of(context)
                                                       .primaryColor
@@ -209,9 +207,7 @@ class _LocationWeatherInfoState extends State<LocationWeatherInfo> {
                                                     ? CupertinoIcons
                                                         .location_fill
                                                     : Icons.near_me,
-                                                color: (context
-                                                            .watch<Locations>()
-                                                            .selectedLocationIndex ==
+                                                color: (_selectedIndex ==
                                                         0)
                                                     ? Color(0xBB5F8AF5)
                                                     : Theme.of(context)
@@ -238,9 +234,7 @@ class _LocationWeatherInfoState extends State<LocationWeatherInfo> {
                                       onVisibilityChanged:
                                           (VisibilityInfo info) {
                                         if (info.visibleFraction == 1) {
-                                          int selectedLocationIndex = context
-                                              .read<Locations>()
-                                              .selectedLocationIndex;
+                                          int selectedLocationIndex = _selectedIndex;
                                           if (selectedLocationIndex != index) {
                                             context
                                                 .read<Locations>()

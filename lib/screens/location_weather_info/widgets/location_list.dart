@@ -77,7 +77,7 @@ class _LocationListState extends State<LocationList> {
 
   @override
   Widget build(BuildContext context) {
-    int len = context.watch<Locations>().locations.length;
+    int len = context.read<Locations>().locations.length;
     int _selectedIndex = context.read<Locations>().selectedLocationIndex;
     _scrollController =
         ScrollController(initialScrollOffset: _width * _selectedIndex);
@@ -93,8 +93,8 @@ class _LocationListState extends State<LocationList> {
           return FadeTransition(
             opacity: animation,
             child: buildAnimatedListItem(
-                context.watch<Locations>().locations[index],
-                context.watch<Locations>().selectedLocationIndex,
+                context.read<Locations>().locations[index],
+                _selectedIndex,
                 index),
           );
         },

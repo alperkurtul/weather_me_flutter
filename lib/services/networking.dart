@@ -19,19 +19,20 @@ class NetworkHelper {
     int triedCount = 0;
     int maxTryCount = 5;
     if (uri!.toString().contains('/2.5/find?')) {
-      maxTryCount = 1;
+      //maxTryCount = 1;
+      maxTryCount = 5;
     }
     //print('maxTryCount : ' + maxTryCount.toString());
     while (response == null && triedCount < maxTryCount) {
       triedCount++;
       //print('triedCount : ' + triedCount.toString());
       try {
-        //print('http.get TRY : ' + url.toString());
+        //print('http.get TRY : ' + uri.toString());
         response = await http.get(
           uri!,
           headers: {'Content-Type': 'application/json'},
         ).timeout(Duration(seconds: 1 + triedCount));
-        //print('http.get SUCCESS : ' + url.toString());
+        //print('http.get SUCCESS : ' + uri.toString());
       } on TimeoutException catch (e) {
         print(
             'http.get ERROR TimeoutException : ${e.message} : ${uri!.toString()}');

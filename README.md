@@ -171,3 +171,27 @@ XCODE ==> Runner ==> General
 ## SPLASH Page Background Color
 
 `#5A73EF`
+
+## Build iOS app for deployment
+
+```
+- See the page: https://docs.flutter.dev/deployment/ios
+- Read titles, "Update the app's build and version numbers" , "Create an app bundle" , "Upload the app bundle to App Store Connect"
+
+- version: 1.2.5
+- /Users/alperkurtul/development/flutter_macos_arm64_3.19.5-stable/bin/flutter clean
+- /Users/alperkurtul/development/flutter_macos_arm64_3.19.5-stable/bin/flutter build ipa
+- Open build/ios/archive/MyApp.xcarchive in Xcode.
+- First, Validate App. Then, Distribute App.
+```
+
+## Build Android app for deployment
+
+```
+- See the page: https://docs.flutter.dev/deployment/android
+- Read title, "Build an app bundle"
+
+- version: 1.2.5+15
+- /Users/alperkurtul/development/flutter_macos_arm64_3.19.5-stable/bin/flutter clean
+- /Users/alperkurtul/development/flutter_macos_arm64_3.19.5-stable/bin/flutter build appbundle
+```

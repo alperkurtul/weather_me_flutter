@@ -17,25 +17,6 @@ For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-## Output of 'flutter doctor'
-```
-[✓] Flutter (Channel stable, 1.22.6, on Mac OS X 10.15.7 19H114 darwin-x64, locale en-TR)
-
-[!] Android toolchain - develop for Android devices (Android SDK version 29.0.2)
-    ! Some Android licenses not accepted.  To resolve this, run: flutter doctor --android-licenses
-[✓] Xcode - develop for iOS and macOS (Xcode 12.2)
-[!] Android Studio (version 4.1)
-    ✗ Flutter plugin not installed; this adds Flutter specific functionality.
-    ✗ Dart plugin not installed; this adds Dart specific functionality.
-[✓] IntelliJ IDEA Ultimate Edition (version 2020.3)
-[!] IntelliJ IDEA Community Edition (version 2020.3)
-    ✗ Flutter plugin not installed; this adds Flutter specific functionality.
-    ✗ Dart plugin not installed; this adds Dart specific functionality.
-[✓] VS Code (version 1.54.1)
-[✓] Connected device (1 available)
-
-! Doctor found issues in 3 categories.
-```
 
 ## pubsbec.yaml
 
@@ -44,47 +25,6 @@ name: weather_me_flutter
 description: A new Flutter application.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
-version: 1.0.0+1
-
-environment:
-  sdk: ">=2.7.0 <3.0.0"
-
-dependencies:
-  flutter:
-    sdk: flutter
-
-  cupertino_icons: ^1.0.0
-  provider: ^4.3.3
-  http: ^0.12.2
-  shared_preferences: ^0.5.12+4
-  geolocator: ^6.2.0
-  flutter_spinkit: ^4.1.2
-  visibility_detector: ^0.1.5
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
-flutter:
-
-  uses-material-design: true
-
-  assets:
-    - assets/background.jpg
-
-  fonts:
-    - family: Pacifico
-      fonts:
-        - asset: fonts/Pacifico-Regular.ttf
-
-    - family: Source Sans Pro
-      fonts:
-        - asset: fonts/SourceSansPro-Regular.ttf
-
-    - family: Roboto
-      fonts:
-        - asset: fonts/Roboto-Regular.ttf
 ```
 
 ## ANDROID Settings

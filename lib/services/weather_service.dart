@@ -57,7 +57,7 @@ class WeatherService {
   static Future<LocationModel> getCurrentLocationByCoord(BuildContext? ctx,
       {double? lon, double? lat}) async {
     networkHelper.context = ctx;
-    CurrentLocationService currentLocationService = CurrentLocationService();
+    CurrentLocationService currentLocationService = CurrentLocationService(ctx!);
 
     if (lon != null && lat != null) {
       //print('PRESET CurrentLocation !');

@@ -42,13 +42,13 @@ class _LocationWeatherInfoState extends State<LocationWeatherInfo> {
   }
 
   _checkForCurrentLocation() async {
-    CurrentLocationService currentLocation = CurrentLocationService();
+    CurrentLocationService currentLocation = CurrentLocationService(context);
     await currentLocation.getCurrentLocation();
     if (currentLocation.locationRetrieved == 'OK') {
       context.read<Locations>().deviceLocationIsWorking();
       context.read<Locations>().gatherInitialData(context);
     } else {
-      showAlertDialog(context, currentLocation.errorExplanation!);
+      showAlertDialog(context, 'Location Error', currentLocation.errorExplanation!);
     }
   }
 

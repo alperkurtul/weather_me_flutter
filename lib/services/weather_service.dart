@@ -54,7 +54,7 @@ class WeatherService {
     }
   }
 
-  static Future<LocationModel> getCurrentLocationByCoord(BuildContext? ctx,
+  static Future<LocationModel> getCurrentLocationByCoordination(BuildContext? ctx,
       {double? lon, double? lat}) async {
     networkHelper.context = ctx;
     CurrentLocationService currentLocationService = CurrentLocationService(ctx!);
@@ -69,7 +69,7 @@ class WeatherService {
       await currentLocationService.getCurrentLocation();
     }
 
-    LocationModel _locationModel = LocationModel();
+    LocationModel locationModel = LocationModel();
     if (currentLocationService.longitude != null &&
         currentLocationService.latitude != null) {
       String url = AppConfiguration.apiForCurrentWeatherByCoordApi;
@@ -80,18 +80,23 @@ class WeatherService {
       Uri uri = Uri.parse(url);
       networkHelper.uri = uri;
 
+      dynamic weatherData;
       try {
-        var weatherData = await networkHelper.getData();
-        _locationModel.locationId = weatherData['id'].toString();
+        weatherData = await networkHelper.getData();
+        locationModel.locationId = weatherData['id'].toString();
       } catch (err) {
-        print('WeatherService.getCurrentLocationByCoord : $err');
-        _locationModel.locationId = '0';
+        if (weatherData == 'NOK') {
+          print('WeatherService.getCurrentLocationByCoordination : (weatherData = $weatherData) ');
+        } else {
+          print('WeatherService.getCurrentLocationByCoordination : $err');
+        }
+        locationModel.locationId = '0';
       }
 
-      return _locationModel;
+      return locationModel;
     } else {
-      _locationModel.locationId = '0';
-      return _locationModel;
+      locationModel.locationId = '0';
+      return locationModel;
     }
   }
 

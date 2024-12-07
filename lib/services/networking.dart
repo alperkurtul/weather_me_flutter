@@ -14,7 +14,7 @@ class NetworkHelper {
   NetworkHelper({this.context, this.uri});
 
   Future<dynamic> getData() async {
-    http.Response? response = null;
+    http.Response? response;
 
     int triedCount = 0;
     int maxTryCount = 5;
@@ -33,11 +33,11 @@ class NetworkHelper {
           headers: {'Content-Type': 'application/json'},
         ).timeout(Duration(seconds: 1 + triedCount));
         //print('http.get SUCCESS : ' + uri.toString());
-      } on TimeoutException catch (e) {
+      } on TimeoutException catch (err) {
         print(
-            'http.get ERROR TimeoutException : ${e.message} : ${uri!.toString()}');
-      } catch (e) {
-        print('http.get ERROR : ${e} : ${uri!.toString()}');
+            'http.get ERROR TimeoutException : ${err.message} : ${uri!.toString()}');
+      } catch (err) {
+        print('http.get ERROR : $err : ${uri!.toString()}');
         /*print(
             'http.get ERROR : ${e.message} : ${uri.toString()}');*/
         /*if (e.osError != null && e.osError.message != null) {
@@ -74,7 +74,7 @@ class NetworkHelper {
       return json.decode(utf8.decode(response.bodyBytes));
     } else {
       print(
-          'HTTP request DONE with ERROR! : ' + response.statusCode.toString());
+          'HTTP request DONE with ERROR! : ${response.statusCode.toString()}');
       return response.statusCode;
     }
   }

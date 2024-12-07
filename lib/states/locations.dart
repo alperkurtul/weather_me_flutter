@@ -200,7 +200,7 @@ class Locations with ChangeNotifier, DiagnosticableTreeMixin {
 
         if (location.isGeoLocation) {
           LocationModel locationModel =
-              await WeatherService.getCurrentLocationByCoord(_context);
+              await WeatherService.getCurrentLocationByCoordination(_context);
           location.locationId = locationModel.locationId;
         } else {
           validityDuration = AppConfiguration.weatherDataValidDuration;

@@ -18,11 +18,13 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 version: 1.2.8+15
 
-# STABLE WITH flutter version "flutter_macos_arm64_3.13.9-stable" between ??-??-???? and 07-04-2024
-# STABLE WITH flutter version "flutter_macos_arm64_3.19.5-stable" between 07-04-2024 and ??-??-????
+# 01) STABLE WITH flutter version "flutter_macos_arm64_3.13.9-stable" between ??-??-???? and 07-04-2024
+# 02) STABLE WITH flutter version "flutter_macos_arm64_3.19.5-stable" between 07-04-2024 and 07-12-2024
+# CURRENT => STABLE WITH flutter version "flutter_macos_arm64_3.24.5-stable" between 07-12-2024 and ??-??-????
 environment:
-  sdk: '>=3.3.3 <4.0.0'  # "for flutter_macos_arm64_3.19.5-stable" between 07-04-2024 and ??-??-????
-#  sdk: '>=3.1.5 <4.0.0'  # "for flutter_macos_arm64_3.13.9-stable" between ??-??-???? and 07-04-2024
+  # 01) sdk: '>=3.1.5 <4.0.0'  # "for flutter_macos_arm64_3.13.9-stable" between ??-??-???? and 07-04-2024
+  # 02) sdk: '>=3.3.3 <4.0.0'  # "for flutter_macos_arm64_3.19.5-stable" between 07-04-2024 and 07-12-2024
+  sdk: ^3.5.4  # "for flutter_macos_arm64_3.24.5-stable" between 07-12-2024 and ??-??-????
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -37,16 +39,17 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.8
   provider: ^6.1.2
-  http: ^1.2.1
-  shared_preferences: ^2.2.2
+  http: ^1.2.2
+  shared_preferences: ^2.3.3
   flutter_spinkit: ^5.2.1
   visibility_detector: ^0.4.0+2
-  intl: ^0.19.0
+  intl: ^0.20.1
   #location: ^5.0.3
-  flutter_dotenv: ^5.1.0
-  geolocator: ^11.0.0
+  flutter_dotenv: ^5.2.1
+  geolocator: ^13.0.2
+  win32: ^5.9.0
 
 dev_dependencies:
   flutter_test:
@@ -57,7 +60,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.2
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

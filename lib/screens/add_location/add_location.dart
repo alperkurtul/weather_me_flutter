@@ -11,6 +11,8 @@ import 'package:weather_me_flutter/utilities/app_configuration.dart';
 import 'package:weather_me_flutter/utilities/delay_and_trigger_utility.dart';
 
 class AddLocation extends StatefulWidget {
+  const AddLocation({super.key});
+
   @override
   _AddLocationState createState() => _AddLocationState();
 }
@@ -19,17 +21,22 @@ class _AddLocationState extends State<AddLocation> {
   String? searchText;
   List<dynamic> locationList = [];
   String _latestVal = '';
-  DelayAndTriggerUtility _delayAndTriggerUtility = DelayAndTriggerUtility(800, 50);
+  final DelayAndTriggerUtility _delayAndTriggerUtility =
+      DelayAndTriggerUtility(800, 50);
 
-  Future<void> addNewLocation(String? locationName, String? locId) async {
-    await context.read<Locations>().addNewLocation(
+  Future<void> addNewLocation(
+      BuildContext ctx, String? locationName, String? locId) async {
+    await ctx.read<Locations>().addNewLocation(
         LocationModel(locationId: locId!, locationName: locationName!));
-    Navigator.pop(context);
+    if (ctx.mounted) {
+      Navigator.pop(ctx);
+    }
   }
 
   Future<void> _getLocationListWithDelayed(String val) async {
     _latestVal = val;
-    bool isDelayPeriodEndedResult = await _delayAndTriggerUtility.isDelayPeriodEnded();
+    bool isDelayPeriodEndedResult =
+        await _delayAndTriggerUtility.isDelayPeriodEnded();
     if (isDelayPeriodEndedResult) {
       await _getLocationList(_latestVal);
     }
@@ -38,8 +45,9 @@ class _AddLocationState extends State<AddLocation> {
   Future<void> _getLocationList(String val) async {
     //print('****** _getLocationList ***** : $val');
     searchText = val;
+    WeatherService weatherService = WeatherService();
 
-    var response;
+    dynamic response;
     if (searchText == '') {
       setState(() {
         locationList = [];
@@ -47,7 +55,7 @@ class _AddLocationState extends State<AddLocation> {
     } else {
       searchText = searchText!.trimRight();
       response =
-          await WeatherService.getLocationList(context, location: searchText);
+          await weatherService.getLocationList(context, location: searchText);
 
       if (response != 'ERROR' && response != 'NOK') {
         if (AppConfiguration.apiMode == ApplicationApiMode.WeatherMeApi) {
@@ -73,7 +81,7 @@ class _AddLocationState extends State<AddLocation> {
               }
             }
 
-            if (locList.length > 0) {
+            if (locList.isNotEmpty) {
               setState(() {
                 locationList = locList;
               });
@@ -97,7 +105,7 @@ class _AddLocationState extends State<AddLocation> {
   }
 
   Widget buildLocationList() {
-    if (locationList.length == 0) {
+    if (locationList.isEmpty) {
       return SizedBox();
     } else {
       return Container(
@@ -125,7 +133,7 @@ class _AddLocationState extends State<AddLocation> {
               padding: EdgeInsets.symmetric(vertical: 12.0),
               child: GestureDetector(
                 onTap: () {
-                  addNewLocation(locationName, locationId);
+                  addNewLocation(context, locationName, locationId);
                 },
                 child: Text(
                   '$locationName, $country',

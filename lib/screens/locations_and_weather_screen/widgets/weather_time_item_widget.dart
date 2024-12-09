@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:weather_me_flutter/common_widgets/spinner_circle.dart';
 
-class WeatherOnTime extends StatelessWidget {
+import '../../../utilities/misc_constants.dart';
+
+class WeatherTimeItemWidget extends StatelessWidget {
   final String? time;
-  final int? degree;
+  final String? degree;
   final String icon;
   final bool selected;
 
-  WeatherOnTime(
-      {this.time, this.degree, this.icon = '🌤', this.selected = false});
+  const WeatherTimeItemWidget(
+      {super.key,
+      this.time,
+      this.degree,
+      this.icon = '🌤',
+      this.selected = false});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +33,7 @@ class WeatherOnTime extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(time!,
+              Text(time == kWeatherDataDefaultValue ? '' : time!,
                   style: TextStyle(
                       color: selected
                           ? Color(0xFF565EEA)
@@ -34,9 +41,13 @@ class WeatherOnTime extends StatelessWidget {
               CircleAvatar(
                 backgroundColor: Color(0xFF829BF4).withOpacity(1),
                 radius: 30.0,
-                child: Text(icon, style: TextStyle(fontSize: 45.0)),
+                child: (icon == kWeatherDataDefaultValue)
+                    ? SpinnerCircle(
+                        spinnerSize: 20,
+                      )
+                    : Text(icon, style: TextStyle(fontSize: 45.0)),
               ),
-              Text('$degree°',
+              Text(degree == kWeatherDataDefaultValue ? '' : '$degree°',
                   style: TextStyle(
                       color: selected
                           ? Color(0xFF565EEA)

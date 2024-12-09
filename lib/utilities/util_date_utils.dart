@@ -7,16 +7,14 @@ class UTILDateUtils {
     if (format == null || format == '') {
       format = 'yyyy-MM-dd HH:mm:ss';
     }
-    if (timezoneInMilliseconds == null) {
-      timezoneInMilliseconds = 0;
-    }
-    final DateFormat _dateFormat = DateFormat(format);
+    timezoneInMilliseconds ??= 0;
+    final DateFormat dateFormat = DateFormat(format);
 
     int timeInMilliseconds = DateTime.now().toUtc().millisecondsSinceEpoch;
 
     timeInMilliseconds = timeInMilliseconds + timezoneInMilliseconds;
 
-    return _dateFormat.format(
+    return dateFormat.format(
         DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds, isUtc: true));
   }
 

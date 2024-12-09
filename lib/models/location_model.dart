@@ -18,9 +18,7 @@ class LocationModel {
     this.latitude = '',
     this.weatherData,
   }) {
-    if (this.weatherData == null) {
-      weatherData = WeatherModel();
-    }
+    weatherData ??= WeatherModel();
   }
 
   dynamic toMap() {

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_me_flutter/states/locations.dart';
-import 'package:weather_me_flutter/screens/location_weather_info/widgets/location_item.dart';
+import 'package:weather_me_flutter/screens/locations_and_weather_screen/widgets/location_item_widget.dart';
 
-class LocationList extends StatefulWidget {
+class LocationItemListWidget extends StatefulWidget {
+  const LocationItemListWidget({super.key});
+
   @override
-  _LocationListState createState() => _LocationListState();
+  _LocationItemListWidgetState createState() => _LocationItemListWidgetState();
 }
 
-class _LocationListState extends State<LocationList> {
+class _LocationItemListWidgetState extends State<LocationItemListWidget> {
   late ScrollController _scrollController;
   final GlobalKey<AnimatedListState> listKey = GlobalKey();
   final double _width = 135;
@@ -43,7 +45,7 @@ class _LocationListState extends State<LocationList> {
   }
 
   Widget buildAnimatedListItem(item, [selectedLocationIndex, int? index]) {
-    return LocationItem(
+    return LocationItemWidget(
       locationName: item.locationName,
       locationIndex: index,
       selected: (selectedLocationIndex == index) ? true : false,
@@ -78,27 +80,23 @@ class _LocationListState extends State<LocationList> {
   @override
   Widget build(BuildContext context) {
     int len = context.read<Locations>().locations.length;
-    int _selectedIndex = context.read<Locations>().selectedLocationIndex;
+    int selectedIndex = context.read<Locations>().selectedLocationIndex;
     _scrollController =
-        ScrollController(initialScrollOffset: _width * _selectedIndex);
+        ScrollController(initialScrollOffset: _width * selectedIndex);
 
-    return Container(
-      child: AnimatedList(
-        key: listKey,
-        physics: NeverScrollableScrollPhysics(),
-        controller: _scrollController,
-        scrollDirection: Axis.horizontal,
-        initialItemCount: len,
-        itemBuilder: (context, index, animation) {
-          return FadeTransition(
-            opacity: animation,
-            child: buildAnimatedListItem(
-                context.read<Locations>().locations[index],
-                _selectedIndex,
-                index),
-          );
-        },
-      ),
+    return AnimatedList(
+      key: listKey,
+      physics: NeverScrollableScrollPhysics(),
+      controller: _scrollController,
+      scrollDirection: Axis.horizontal,
+      initialItemCount: len,
+      itemBuilder: (context, index, animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: buildAnimatedListItem(
+              context.read<Locations>().locations[index], selectedIndex, index),
+        );
+      },
     );
   }
 }

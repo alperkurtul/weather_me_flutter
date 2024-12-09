@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_me_flutter/states/locations.dart';
-import 'package:weather_me_flutter/screens/location_weather_info/location_weather_info.dart';
+import 'package:weather_me_flutter/screens/locations_and_weather_screen/locations_and_weather_screen.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -25,6 +25,8 @@ Future main() async {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -66,8 +68,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       theme: ThemeData.dark().copyWith(
         primaryColor: Colors.white,
         textTheme: ThemeData.dark().textTheme.apply(
-          fontFamily: 'Roboto',
-        ),
+              fontFamily: 'Roboto',
+            ),
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor: Colors.black.withOpacity(0.8),
         ),
@@ -92,7 +94,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         LocationWeatherInfo.routeName: (context) => LocationWeatherInfo(),
         CurrentWeather.routeName: (context) => CurrentWeather(),
       },*/
-      home: LocationWeatherInfo(),
+      home: LocationsAndWeatherScreen(),
     );
   }
 }

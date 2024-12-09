@@ -1,26 +1,27 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_me_flutter/common_widgets/spinner_circle.dart';
 import 'package:weather_me_flutter/models/next_day_model.dart';
 import 'package:weather_me_flutter/models/weather_model.dart';
-import 'package:weather_me_flutter/screens/location_weather_info/widgets/weather_on_time_list.dart';
-import 'package:weather_me_flutter/screens/location_weather_info/widgets/wind_humidity_etc.dart';
+import 'package:weather_me_flutter/screens/locations_and_weather_screen/widgets/weather_time_item_list_widget.dart';
+import 'package:weather_me_flutter/screens/locations_and_weather_screen/widgets/weather_wind_humidity_etc_widget.dart';
 import 'package:weather_me_flutter/services/weather_service.dart';
+import 'package:weather_me_flutter/utilities/misc_constants.dart';
 import 'package:weather_me_flutter/utilities/style_settings.dart';
 import 'package:weather_me_flutter/states/locations.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-class LocationWeather extends StatefulWidget {
+class WeatherForLocationsWidget extends StatefulWidget {
   final int? index;
 
-  const LocationWeather({this.index});
+  const WeatherForLocationsWidget({super.key, this.index});
 
   @override
-  _LocationWeatherState createState() => _LocationWeatherState();
+  _WeatherForLocationsWidgetState createState() =>
+      _WeatherForLocationsWidgetState();
 }
 
-class _LocationWeatherState extends State<LocationWeather> {
+class _WeatherForLocationsWidgetState extends State<WeatherForLocationsWidget> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _keyAnimatedContainer = GlobalKey();
   final GlobalKey _keyListView = GlobalKey();
@@ -43,28 +44,28 @@ class _LocationWeatherState extends State<LocationWeather> {
     _animatedContainerDefaultHeight = _getAnimatedContainerSizes();
 
     _listViewDefaultHeight = 0;
-    Size _contextSize;
+    Size contextSize;
 
     if (_keyListView1.currentContext != null) {
-      _contextSize = _keyListView1.currentContext!.size!;
-      _listViewDefaultHeight = _listViewDefaultHeight! + _contextSize.height;
+      contextSize = _keyListView1.currentContext!.size!;
+      _listViewDefaultHeight = _listViewDefaultHeight! + contextSize.height;
     }
 
     if (_keyListView2.currentContext != null) {
-      _contextSize = _keyListView2.currentContext!.size!;
-      _listViewDefaultHeight = _listViewDefaultHeight! + _contextSize.height;
+      contextSize = _keyListView2.currentContext!.size!;
+      _listViewDefaultHeight = _listViewDefaultHeight! + contextSize.height;
     }
 
     if (_keyListView3.currentContext != null) {
-      _contextSize = _keyListView3.currentContext!.size!;
-      _listViewDefaultHeight = _listViewDefaultHeight! + _contextSize.height;
+      contextSize = _keyListView3.currentContext!.size!;
+      _listViewDefaultHeight = _listViewDefaultHeight! + contextSize.height;
     }
 
     if (_keyListView.currentContext != null) {
-      _contextSize = _keyListView.currentContext!.size!;
-      if (_listViewDefaultHeight! > _contextSize.height) {
+      contextSize = _keyListView.currentContext!.size!;
+      if (_listViewDefaultHeight! > contextSize.height) {
         _listViewDefaultHeight = _listViewDefaultHeight! -
-            ((_listViewDefaultHeight! - _contextSize.height) / 2);
+            ((_listViewDefaultHeight! - contextSize.height) / 2);
       }
     }
   }
@@ -75,18 +76,16 @@ class _LocationWeatherState extends State<LocationWeather> {
     }
 
     _nextDayListOffset = _scrollController.offset;
-    if (_animatedContainerHeight == null) {
-      _animatedContainerHeight = _animatedContainerDefaultHeight;
-    }
+    _animatedContainerHeight ??= _animatedContainerDefaultHeight;
   }
 
   _onVerticalDragUpdate(DragUpdateDetails details) {
     if (details.delta.dy < 0) {
-      // draging up
+      // dragging up
       _animatedContainerHeight =
           _animatedContainerHeight! - (-details.delta.dy * 1);
       if (_animatedContainerHeight! < 0.0) _animatedContainerHeight = 0.0;
-      dynamic height = _getAnimatedContainerSizes();
+      //dynamic height = _getAnimatedContainerSizes();
       //if (height == 0.0) {
       if (_animatedContainerHeight == 0.0) {
         _nextDayListOffset = _nextDayListOffset! + (-details.delta.dy * 1);
@@ -96,7 +95,7 @@ class _LocationWeatherState extends State<LocationWeather> {
         _scrollController.jumpTo(_nextDayListOffset!);
       }
     } else if (details.delta.dy > 0) {
-      // draging down
+      // dragging down
       if (!_theNextDayIsVisible!) {
         _nextDayListOffset = _nextDayListOffset! - (details.delta.dy * 1);
         if (_nextDayListOffset! < 0.5) _nextDayListOffset = 0.0;
@@ -119,16 +118,32 @@ class _LocationWeatherState extends State<LocationWeather> {
 
   @override
   Widget build(BuildContext context) {
-    final Color _borderColor = Colors.transparent;
+    final Color borderColor = Colors.transparent;
 
+    // TODO
     WeatherModel? weatherInfo =
         context.read<Locations>().locations[widget.index!].weatherData;
-    List<NextDayModel>? nextDays =
-        context.read<Locations>().locations[widget.index!].weatherData!.nextDays;
+    weatherInfo ??= WeatherModel(dataLoaded: true);
 
-    String realTemperature = weatherInfo!.realTemperature;
+    List<NextDayModel>? nextDays = weatherInfo.nextDays;
 
-    final double _availableWidth = MediaQuery.of(context).size.width -
+    String realTemperature =
+        (weatherInfo.realTemperature == kWeatherDataDefaultValue)
+            ? ''
+            : '${weatherInfo.realTemperature}°';
+
+    String commaSign =
+        (weatherInfo.locationName == kWeatherDataDefaultValue) ? '' : ',';
+
+    String locationName = (weatherInfo.locationName == kWeatherDataDefaultValue)
+        ? ''
+        : weatherInfo.locationName;
+
+    String countryCode = (weatherInfo.countryCode == kWeatherDataDefaultValue)
+        ? ''
+        : weatherInfo.countryCode;
+
+    final double availableWidth = MediaQuery.of(context).size.width -
         MediaQuery.of(context).padding.left -
         MediaQuery.of(context).padding.right;
 
@@ -143,9 +158,9 @@ class _LocationWeatherState extends State<LocationWeather> {
           child: Divider(thickness: 1.5, color: Color(0xFFCCCCCC)),
         ),
         Container(
-          decoration: BoxDecoration(border: Border.all(color: _borderColor)),
+          decoration: BoxDecoration(border: Border.all(color: borderColor)),
           child: Center(
-            child: WeatherOnTimeList(weatherInfo: weatherInfo!),
+            child: WeatherTimeItemListWidget(weatherInfo: weatherInfo),
           ),
         ),
         Padding(
@@ -159,91 +174,64 @@ class _LocationWeatherState extends State<LocationWeather> {
     );
 
     List<Widget> nextDaysList = [];
-    if (nextDays!.length > 0) {
-      dynamic item = nextDays[0];
-      nextDaysList.add(VisibilityDetector(
-        key: Key('theNextDay'),
-        onVisibilityChanged: (VisibilityInfo info) {
-          if (info.visibleFraction == 1.0) {
-            //print('SEEN');
-            setState(() {
-              _theNextDayIsVisible = true;
-              //_scrollController.jumpTo(0);
-            });
-          } else if (info.visibleFraction <= 0.1) {
-            //print('NOTSEEN');
-            setState(() {
-              _theNextDayIsVisible = false;
-            });
-          }
-        },
-        child: Row(
-          children: [
-            Expanded(
-              flex: 5,
-              child: Text(
-                '${item.dtTxt}',
-                style: TextStyle(fontSize: 20.0),
-              ),
-            ),
-            Expanded(
-                flex: 3,
-                child: Text(
-                  //'${item.id}',
-                  WeatherService.getWeatherConditionIcon(
-                      int.parse(item.id))['icon'],
-                  style: TextStyle(fontSize: 35.0),
-                )),
-            Expanded(
-                flex: 1,
-                child: Text(
-                  '${item.temp}',
-                  style: TextStyle(fontSize: 20.0),
-                  textAlign: TextAlign.end,
-                )),
-          ],
-        ),
-      ));
-    }
-
-    if (nextDays.length >= 1) {
-      nextDays.sublist(1).forEach((item) {
+    if (nextDays!.isNotEmpty) {
+      for (var item in nextDays) {
         nextDaysList.add(Row(
           children: [
             Expanded(
               flex: 5,
               child: Text(
-                '${item.dtTxt}',
+                item.dtTxt == kWeatherDataDefaultValue ? '' : '${item.dtTxt}',
                 style: TextStyle(fontSize: 20.0),
               ),
             ),
             Expanded(
                 flex: 3,
-                child: Text(
-                  WeatherService.getWeatherConditionIcon(
-                      int.parse(item.id!))['icon'],
-                  style: TextStyle(fontSize: 35.0),
-                )),
+                child: (item.id == kWeatherDataDefaultValue)
+                    ? SpinnerCircle(spinnerSize: 20)
+                    : Text(
+                        WeatherService.getWeatherConditionIcon(
+                            int.parse(item.id!))['icon'],
+                        style: TextStyle(fontSize: 35.0),
+                      )),
             Expanded(
                 flex: 1,
                 child: Text(
-                  '${item.temp}',
+                  item.temp == kWeatherDataDefaultValue ? '' : '${item.temp}',
                   style: TextStyle(fontSize: 20.0),
                   textAlign: TextAlign.end,
                 )),
           ],
         ));
-      });
+      }
+    }
+
+    if (nextDaysList.isNotEmpty) {
+      Widget firstWidget = nextDaysList[0];
+      nextDaysList[0] = VisibilityDetector(
+          key: Key('theNextDay'),
+          onVisibilityChanged: (VisibilityInfo info) {
+            if (info.visibleFraction == 1.0) {
+              setState(() {
+                _theNextDayIsVisible = true;
+              });
+            } else if (info.visibleFraction <= 0.1) {
+              setState(() {
+                _theNextDayIsVisible = false;
+              });
+            }
+          },
+          child: firstWidget);
     }
 
     return !weatherInfo.dataLoaded
-        ? Container(
+        ? SizedBox(
             width: MediaQuery.of(context).size.width -
                 MediaQuery.of(context).padding.left -
                 MediaQuery.of(context).padding.right,
             child: SpinnerCircle(),
           )
-        : Container(
+        : SizedBox(
             width: MediaQuery.of(context).size.width -
                 MediaQuery.of(context).padding.left -
                 MediaQuery.of(context).padding.right,
@@ -255,51 +243,58 @@ class _LocationWeatherState extends State<LocationWeather> {
               onVerticalDragUpdate: (details) => _onVerticalDragUpdate(details),
               child: Container(
                 decoration:
-                    BoxDecoration(border: Border.all(color: _borderColor)),
+                    BoxDecoration(border: Border.all(color: borderColor)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: _borderColor)),
+                      decoration:
+                          BoxDecoration(border: Border.all(color: borderColor)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  WeatherService.getWeatherConditionIcon(
-                                      int.parse(weatherInfo.id))['icon'],
-                                  style: StyleSettings.mainIconSize(context),
-                                ),
-                                SizedBox(
-                                  width: 15.0,
-                                ),
-                                Column(
-                                  children: [
-                                    Container(
-                                        child: Text('Today',
-                                            style: TextStyle(
-                                                fontSize: 25.0,
-                                                fontWeight: FontWeight.bold))),
-                                    Container(
-                                        child: Text(
-                                      '${weatherInfo.currentDateDisplay}',
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              weatherInfo.id == kWeatherDataDefaultValue
+                                  ? SpinnerCircle(
+                                      spinnerSize: 20,
+                                    )
+                                  : Text(
+                                      WeatherService.getWeatherConditionIcon(
+                                          int.parse(weatherInfo.id))['icon'],
                                       style:
-                                          StyleSettings.mediumSizeText(context),
-                                    )),
-                                    Container(
-                                        child: Text(
-                                      '${weatherInfo.weatherDataTime.substring(11, 16)}',
-                                      style:
-                                          StyleSettings.mediumSizeText(context),
-                                    )),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                          StyleSettings.mainIconSize(context),
+                                    ),
+                              SizedBox(
+                                width: 15.0,
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                      weatherInfo.id == kWeatherDataDefaultValue
+                                          ? ''
+                                          : 'Today',
+                                      style: TextStyle(
+                                          fontSize: 25.0,
+                                          fontWeight: FontWeight.bold)),
+                                  Text(
+                                    weatherInfo.currentDateDisplay,
+                                    style:
+                                        StyleSettings.mediumSizeText(context),
+                                  ),
+                                  Text(
+                                    weatherInfo.weatherDataTime ==
+                                            kWeatherDataDefaultValue
+                                        ? ''
+                                        : weatherInfo.weatherDataTime
+                                            .substring(11, 16),
+                                    style:
+                                        StyleSettings.mediumSizeText(context),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                           AnimatedContainer(
                             key: _keyAnimatedContainer,
@@ -309,40 +304,27 @@ class _LocationWeatherState extends State<LocationWeather> {
                             child: FittedBox(
                               child: Column(
                                 children: [
-                                  Container(
-                                    child: Text(
-                                        '${weatherInfo.locationName}, ${weatherInfo.countryCode}',
-                                        style: StyleSettings.mediumSizeText(
-                                            context)),
-                                  ),
-                                  Container(
-                                    child: Text(
-                                        '$realTemperature°',
-                                        style:
-                                            StyleSettings.mainTemperatureSize(
-                                                context)),
-                                  ),
-                                  Container(
-                                    width: _availableWidth,
+                                  Text('$locationName$commaSign $countryCode',
+                                      style: StyleSettings.mediumSizeText(
+                                          context)),
+                                  Text(realTemperature,
+                                      style: StyleSettings.mainTemperatureSize(
+                                          context)),
+                                  SizedBox(
+                                    width: availableWidth,
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
                                       children: [
-                                        Container(
-                                          child: Text(
-                                              'Min ${weatherInfo.minTemperature}°',
-                                              style: TextStyle(fontSize: 17.0)),
-                                        ),
-                                        Container(
-                                          child: Text(
-                                              'Feels like ${weatherInfo.feelsTemperature}°',
-                                              style: TextStyle(fontSize: 17.0)),
-                                        ),
-                                        Container(
-                                          child: Text(
-                                              'Max ${weatherInfo.maxTemperature}°',
-                                              style: TextStyle(fontSize: 17.0)),
-                                        ),
+                                        Text(
+                                            'Min ${weatherInfo.minTemperature}°',
+                                            style: TextStyle(fontSize: 17.0)),
+                                        Text(
+                                            'Feels like ${weatherInfo.feelsTemperature}°',
+                                            style: TextStyle(fontSize: 17.0)),
+                                        Text(
+                                            'Max ${weatherInfo.maxTemperature}°',
+                                            style: TextStyle(fontSize: 17.0)),
                                       ],
                                     ),
                                   ),
@@ -380,7 +362,8 @@ class _LocationWeatherState extends State<LocationWeather> {
                           Container(
                             key: _keyListView3,
                             padding: EdgeInsets.symmetric(horizontal: 20.0),
-                            child: WindHumidityEtc(weatherInfo: weatherInfo),
+                            child: WeatherWindHumidityEtcWidget(
+                                weatherInfo: weatherInfo),
                           ),
                         ],
                       ),

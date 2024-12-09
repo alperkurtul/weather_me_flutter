@@ -5,8 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppConfiguration {
   // 5 minutes
-  static int get weatherDataValidDuration =>
-      DateTime.utc(1970, 1, 1, 0, 5, 0).millisecondsSinceEpoch; // 300000 milliseconds => 5 minutes
+  static int get weatherDataValidDuration => DateTime.utc(1970, 1, 1, 0, 5, 0)
+      .millisecondsSinceEpoch; // 300000 milliseconds => 5 minutes
 
   static final BoxDecoration appBackgroundBoxDecoration = BoxDecoration(
     image: DecorationImage(
@@ -43,7 +43,7 @@ class AppConfiguration {
   }
 
 // For the use of finding location id with GeoLocation
-  static const apiForCurrentWeatherByCoordApi =
+  static const apiForCurrentLocationByCoordination =
       'https://api.openweathermap.org/data/2.5/weather?appid={apiKey}&units=metric&lang=en&lat={lat}&lon={lon}';
 
   static String? apiForLocationListApi() {
@@ -61,7 +61,7 @@ class AppConfiguration {
     return api;
   }
 
-  static String? apiForWeatherDataByLocationIdApi() {
+  static String? apiForWeatherDataByLocationId() {
     String? api;
     if (apiMode == ApplicationApiMode.OpenWeatherApi) {
       api =
@@ -76,7 +76,7 @@ class AppConfiguration {
     return api;
   }
 
-  static String? apiForForecastWeatherByLocationIdApi() {
+  static String? apiForForecastWeatherByLocationId() {
     String? api;
     if (apiMode == ApplicationApiMode.OpenWeatherApi) {
       api =

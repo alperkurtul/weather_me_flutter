@@ -1,6 +1,6 @@
 class DelayAndTriggerUtility {
-  int _delayPeriodInMillisecond;
-  int _delayTimeSteps;
+  final int _delayPeriodInMillisecond;
+  final int _delayTimeSteps;
 
   int? _remainingDelayPeriodInMillisecond;
   bool _isDelayPeriodStarted = false;
@@ -22,11 +22,11 @@ class DelayAndTriggerUtility {
     _isDelayPeriodStarted = true;
     while (_remainingDelayPeriodInMillisecond! > 0) {
       await Future.delayed(Duration(milliseconds: _delayTimeSteps));
-      _remainingDelayPeriodInMillisecond = _remainingDelayPeriodInMillisecond! - _delayTimeSteps;
+      _remainingDelayPeriodInMillisecond =
+          _remainingDelayPeriodInMillisecond! - _delayTimeSteps;
     }
     _isDelayPeriodStarted = false;
     reinitializeRemainingDelayPeriod();
     return Future.value(true);
   }
-
 }

@@ -4,73 +4,87 @@ import 'package:weather_me_flutter/models/next_day_model.dart';
 import 'package:weather_me_flutter/services/weather_service.dart';
 import 'package:weather_me_flutter/utilities/app_configuration.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_me_flutter/utilities/misc_constants.dart';
 import 'package:weather_me_flutter/utilities/util_date_utils.dart';
 
 class WeatherModel {
-  bool dataLoaded = false;
-  String id = '';
-  String main = '';
-  String description = '';
-  String icon = '';
-  String realTemperature = '';
-  String feelsTemperature = '';
-  String minTemperature = '';
-  String maxTemperature = '';
-  String pressure = '';
-  String humidity = '';
-  String countryCode = '';
-  String sunRise = '';
-  String sunSet = '';
-  String timeZone = '';
-  String locationId = '';
-  String locationName = '';
-  String visibility = '';
-  String windSpeed = '';
-  String windDirectionDegree = '';
-  String weatherDataTime = '';
-  String currentDateDisplay = '';
-  String dataLoadedUtcTime = '';
-  List<NearFutureModel>? nearFutures = [];
-  List<NextDayModel>? nextDays = [];
+  bool dataLoaded;
+  String id;
+  String main;
+  String description;
+  String icon;
+  String realTemperature;
+  String feelsTemperature;
+  String minTemperature;
+  String maxTemperature;
+  String pressure;
+  String humidity;
+  String countryCode;
+  String sunRise;
+  String sunSet;
+  String timeZone;
+  String locationId;
+  String locationName;
+  String visibility;
+  String windSpeed;
+  String windDirectionDegree;
+  String weatherDataTime;
+  String currentDateDisplay;
+  String dataLoadedAtUtcTime = '';
+  List<NearFutureTimesModel>? nearFutureTimes;
+  List<NextDayModel>? nextDays;
 
   WeatherModel({
     this.dataLoaded = false,
-    this.id = '',
+    this.id = kWeatherDataDefaultValue,
     this.main = '',
     this.description = '',
     this.icon = '',
-    this.realTemperature = '',
+    this.realTemperature = kWeatherDataDefaultValue,
     this.feelsTemperature = '',
     this.minTemperature = '',
     this.maxTemperature = '',
-    this.pressure = '',
-    this.humidity = '',
-    this.countryCode = '',
-    this.sunRise = '',
-    this.sunSet = '',
+    this.pressure = kWeatherDataDefaultValue,
+    this.humidity = kWeatherDataDefaultValue,
+    this.countryCode = kWeatherDataDefaultValue,
+    this.sunRise = kWeatherDataDefaultValue,
+    this.sunSet = kWeatherDataDefaultValue,
     this.timeZone = '',
     this.locationId = '',
-    this.locationName = '',
-    this.visibility = '',
-    this.windSpeed = '',
-    this.windDirectionDegree = '',
-    this.weatherDataTime = '',
+    this.locationName = kWeatherDataDefaultValue,
+    this.visibility = kWeatherDataDefaultValue,
+    this.windSpeed = kWeatherDataDefaultValue,
+    this.windDirectionDegree = kWeatherDataDefaultValue,
+    this.weatherDataTime = kWeatherDataDefaultValue,
     this.currentDateDisplay = '',
-    this.nearFutures,
+    this.nearFutureTimes,
     this.nextDays,
   }) {
-    if (this.nearFutures == null) {
-      nearFutures = [];
+    if (nearFutureTimes == null) {
+      nearFutureTimes = [];
+      for (int i = 0; i < 9; i++) {
+        nearFutureTimes?.add(NearFutureTimesModel(
+            id: kWeatherDataDefaultValue,
+            temp: kWeatherDataDefaultValue,
+            dtTxt: kWeatherDataDefaultValue));
+      }
     }
-    if (this.nextDays == null) {
+
+    if (nextDays == null) {
       nextDays = [];
+      for (int i = 0; i < 5; i++) {
+        nextDays?.add(NextDayModel(
+            id: kWeatherDataDefaultValue,
+            temp: kWeatherDataDefaultValue,
+            dtTxt: kWeatherDataDefaultValue));
+      }
     }
-    this.dataLoadedUtcTime = '0';
+    dataLoadedAtUtcTime = '0';
   }
 
   dynamic toMap() {
     List nearFutureList = [];
-    for (NearFutureModel nf in nearFutures!) {
+    for (NearFutureTimesModel nf in nearFutureTimes!) {
       dynamic map = nf.toMap();
       nearFutureList.add(map);
     }
@@ -104,7 +118,7 @@ class WeatherModel {
       'windDirectionDegree': windDirectionDegree,
       'weatherDataTime': weatherDataTime,
       'currentDateDisplay': currentDateDisplay,
-      'dataLoadedUtcTime': dataLoadedUtcTime,
+      'dataLoadedAtUtcTime': dataLoadedAtUtcTime,
       'nearFutures': nearFutureList,
       'nextDays': nextDayList,
     };
@@ -121,44 +135,41 @@ class WeatherModel {
   }
 
   void _weatherDataFromWeatherMe(dynamic weatherData) {
-    this.id = weatherData['id'];
-    this.main = weatherData['main'];
-    this.description = weatherData['description'];
-    this.icon = weatherData['icon'];
-    this.realTemperature =
-        double.parse(weatherData['realTemperature'].toString())
-            .toStringAsFixed(0);
-    this.feelsTemperature =
-        double.parse(weatherData['feelsTemperature'].toString())
-            .toStringAsFixed(0);
-    this.minTemperature = double.parse(weatherData['minTemperature'].toString())
+    id = weatherData['id'];
+    main = weatherData['main'];
+    description = weatherData['description'];
+    icon = weatherData['icon'];
+    realTemperature = double.parse(weatherData['realTemperature'].toString())
         .toStringAsFixed(0);
-    this.maxTemperature = double.parse(weatherData['maxTemperature'].toString())
+    feelsTemperature = double.parse(weatherData['feelsTemperature'].toString())
         .toStringAsFixed(0);
-    if (this.realTemperature == '-0') this.realTemperature = '0';
-    if (this.feelsTemperature == '-0') this.feelsTemperature = '0';
-    if (this.minTemperature == '-0') this.minTemperature = '0';
-    if (this.maxTemperature == '-0') this.maxTemperature = '0';
-    this.pressure = weatherData['pressure'];
-    this.humidity = weatherData['humidity'];
-    this.countryCode = weatherData['countryCode'];
-    this.sunRise = weatherData['sunRise'].toString().substring(11, 16);
-    this.sunSet = weatherData['sunSet'].toString().substring(11, 16);
-    this.timeZone = weatherData['timeZone'];
-    this.locationId = weatherData['locationId'];
-    this.locationName = weatherData['locationName'];
-    this.visibility =
-        (double.parse(weatherData['visibility'].toString()) / 1000)
-            .toStringAsFixed(1);
-    this.windSpeed =
+    minTemperature = double.parse(weatherData['minTemperature'].toString())
+        .toStringAsFixed(0);
+    maxTemperature = double.parse(weatherData['maxTemperature'].toString())
+        .toStringAsFixed(0);
+    if (realTemperature == '-0') realTemperature = '0';
+    if (feelsTemperature == '-0') feelsTemperature = '0';
+    if (minTemperature == '-0') minTemperature = '0';
+    if (maxTemperature == '-0') maxTemperature = '0';
+    pressure = weatherData['pressure'];
+    humidity = weatherData['humidity'];
+    countryCode = weatherData['countryCode'];
+    sunRise = weatherData['sunRise'].toString().substring(11, 16);
+    sunSet = weatherData['sunSet'].toString().substring(11, 16);
+    timeZone = weatherData['timeZone'];
+    locationId = weatherData['locationId'];
+    locationName = weatherData['locationName'];
+    visibility = (double.parse(weatherData['visibility'].toString()) / 1000)
+        .toStringAsFixed(1);
+    windSpeed =
         (double.parse(weatherData['windSpeed'].toString()) * 3600 / 1000)
             .toStringAsFixed(2);
-    this.windDirectionDegree = weatherData['windDirectionDegree'];
-    this.weatherDataTime = weatherData['weatherDataTime'];
+    windDirectionDegree = weatherData['windDirectionDegree'];
+    weatherDataTime = weatherData['weatherDataTime'];
 
-    this.currentDateDisplay = this.weatherDataTime.substring(0, 2);
-    this.dataLoadedUtcTime = (UTILDateUtils.utcTimeInMilliseconds).toString();
-    /*print('$locationName last saved at $dataLoadedUtcTime');*/
+    currentDateDisplay = weatherDataTime.substring(0, 2);
+    dataLoadedAtUtcTime = (UTILDateUtils.utcTimeInMilliseconds).toString();
+    /*print('$locationName last saved at dataLoadedAtUtcTime');*/
 
     var months = [
       'Jan',
@@ -174,35 +185,34 @@ class WeatherModel {
       'Nov',
       'Dec'
     ];
-    this.currentDateDisplay = this.currentDateDisplay +
-        ' ' +
-        months[int.parse(this.weatherDataTime.substring(3, 5)) - 1];
+    currentDateDisplay =
+        'currentDateDisplay ${months[int.parse(weatherDataTime.substring(3, 5)) - 1]}';
 
     DateTime date = DateTime.utc(
-        int.parse(this.weatherDataTime.substring(6, 10)),
-        int.parse(this.weatherDataTime.substring(3, 5)),
-        int.parse(this.weatherDataTime.substring(0, 2)));
-    this.currentDateDisplay =
-        DateFormat('EE').format(date) + ', ' + this.currentDateDisplay;
+        int.parse(weatherDataTime.substring(6, 10)),
+        int.parse(weatherDataTime.substring(3, 5)),
+        int.parse(weatherDataTime.substring(0, 2)));
+    currentDateDisplay =
+        '${DateFormat("EE").format(date)}, $currentDateDisplay';
 
-    List<NearFutureModel> nfs = [];
-    nfs.add(NearFutureModel(
-      id: this.id.toString(),
-      temp: this.realTemperature,
+    List<NearFutureTimesModel> nfs = [];
+    nfs.add(NearFutureTimesModel(
+      id: id.toString(),
+      temp: realTemperature,
       dtTxt: 'Now',
     ));
     for (var item in weatherData['nearFuture']) {
       String tmp = double.parse(item['temp'].toString()).toStringAsFixed(0);
       if (tmp == '-0') tmp = '0';
       nfs.add(
-        NearFutureModel(
+        NearFutureTimesModel(
           id: item['id'],
           temp: tmp,
           dtTxt: item['dtTxt'].toString().substring(11, 16),
         ),
       );
     }
-    this.nearFutures = nfs;
+    nearFutureTimes = nfs;
 
     int timezone = int.parse(weatherData['timeZone'].toString());
     final String formattedCurrentDate =
@@ -222,13 +232,8 @@ class WeatherModel {
         index++) {
       var item = weatherData['nextDays'][index];
       String strDate = item['dtTxt'].toString();
-      strDate = strDate.substring(6, 10) +
-          '-' +
-          strDate.substring(3, 5) +
-          '-' +
-          strDate.substring(0, 2) +
-          ' ' +
-          strDate.substring(11);
+      strDate =
+          '${strDate.substring(6, 10)}-${strDate.substring(3, 5)}-${strDate.substring(0, 2)} ${strDate.substring(11)}';
       DateTime date = DateTime.parse(strDate);
       String dayOfWeek = DateFormat('EEEE').format(date);
 
@@ -254,7 +259,7 @@ class WeatherModel {
         ),
       );
     }
-    this.nextDays = nds;
+    nextDays = nds;
   }
 
   void _weatherDataFromOpenWeather(dynamic weatherData, dynamic forecastData) {
@@ -263,7 +268,7 @@ class WeatherModel {
         DateFormat("dd-MM-yyyy HH:mm:ss"); //("dd-MM-yyyy HH:mm a");
     dynamic timeInSeconds;
 
-    this.id = weatherData['weather'][0]['id'].toString();
+    id = weatherData['weather'][0]['id'].toString();
     main = weatherData['weather'][0]['main'];
     description = weatherData['weather'][0]['description'];
     icon = ''; //weatherData['icon'];
@@ -277,41 +282,40 @@ class WeatherModel {
     maxTemperature = double.parse(weatherData['main']['temp_max'].toString())
         .toStringAsFixed(0);
     if (realTemperature == '-0') realTemperature = '0';
-    if (feelsTemperature == '-0') this.feelsTemperature = '0';
-    if (this.minTemperature == '-0') this.minTemperature = '0';
-    if (this.maxTemperature == '-0') this.maxTemperature = '0';
-    this.pressure = weatherData['main']['pressure'].toString();
-    this.humidity = weatherData['main']['humidity'].toString();
-    this.countryCode = weatherData['sys']['country'];
+    if (feelsTemperature == '-0') feelsTemperature = '0';
+    if (minTemperature == '-0') minTemperature = '0';
+    if (maxTemperature == '-0') maxTemperature = '0';
+    pressure = weatherData['main']['pressure'].toString();
+    humidity = weatherData['main']['humidity'].toString();
+    countryCode = weatherData['sys']['country'];
 
     timeInSeconds = weatherData['sys']['sunrise'] + weatherData['timezone'];
-    this.sunRise = dateFormat.format(
+    sunRise = dateFormat.format(
         DateTime.fromMillisecondsSinceEpoch(timeInSeconds * 1000, isUtc: true));
-    this.sunRise = this.sunRise.substring(11, 16);
+    sunRise = sunRise.substring(11, 16);
 
     timeInSeconds = weatherData['sys']['sunset'] + weatherData['timezone'];
-    this.sunSet = dateFormat.format(
+    sunSet = dateFormat.format(
         DateTime.fromMillisecondsSinceEpoch(timeInSeconds * 1000, isUtc: true));
-    this.sunSet = this.sunSet.substring(11, 16);
+    sunSet = sunSet.substring(11, 16);
 
-    this.timeZone = weatherData['timezone'].toString();
-    this.locationId = weatherData['id'].toString();
-    this.locationName = weatherData['name'];
-    this.visibility =
-        (double.parse(weatherData['visibility'].toString()) / 1000)
-            .toStringAsFixed(1);
-    this.windSpeed =
+    timeZone = weatherData['timezone'].toString();
+    locationId = weatherData['id'].toString();
+    locationName = weatherData['name'];
+    visibility = (double.parse(weatherData['visibility'].toString()) / 1000)
+        .toStringAsFixed(1);
+    windSpeed =
         (double.parse(weatherData['wind']['speed'].toString()) * 3600 / 1000)
             .toStringAsFixed(2);
-    this.windDirectionDegree = weatherData['wind']['deg'].toString();
+    windDirectionDegree = weatherData['wind']['deg'].toString();
 
     timeInSeconds = weatherData['dt'] + weatherData['timezone'];
-    this.weatherDataTime = dateFormat.format(
+    weatherDataTime = dateFormat.format(
         DateTime.fromMillisecondsSinceEpoch(timeInSeconds * 1000, isUtc: true));
 
-    this.currentDateDisplay = this.weatherDataTime.substring(0, 2);
-    this.dataLoadedUtcTime = (UTILDateUtils.utcTimeInMilliseconds).toString();
-    /*print('$locationName last saved at $dataLoadedUtcTime');*/
+    currentDateDisplay = weatherDataTime.substring(0, 2);
+    dataLoadedAtUtcTime = (UTILDateUtils.utcTimeInMilliseconds).toString();
+    /*print('$locationName last saved at dataLoadedAtUtcTime');*/
 
     var months = [
       'Jan',
@@ -327,21 +331,20 @@ class WeatherModel {
       'Nov',
       'Dec'
     ];
-    this.currentDateDisplay = this.currentDateDisplay +
-        ' ' +
-        months[int.parse(this.weatherDataTime.substring(3, 5)) - 1];
+    currentDateDisplay =
+        '$currentDateDisplay ${months[int.parse(weatherDataTime.substring(3, 5)) - 1]}';
 
     date = DateTime.utc(
-        int.parse(this.weatherDataTime.substring(6, 10)),
-        int.parse(this.weatherDataTime.substring(3, 5)),
-        int.parse(this.weatherDataTime.substring(0, 2)));
-    this.currentDateDisplay =
-        DateFormat('EE').format(date) + ', ' + this.currentDateDisplay;
+        int.parse(weatherDataTime.substring(6, 10)),
+        int.parse(weatherDataTime.substring(3, 5)),
+        int.parse(weatherDataTime.substring(0, 2)));
+    currentDateDisplay =
+        '${DateFormat('EE').format(date)}, $currentDateDisplay';
 
-    List<NearFutureModel> nfs = [];
-    nfs.add(NearFutureModel(
-      id: this.id.toString(),
-      temp: this.realTemperature,
+    List<NearFutureTimesModel> nfs = [];
+    nfs.add(NearFutureTimesModel(
+      id: id.toString(),
+      temp: realTemperature,
       dtTxt: 'Now',
     ));
     for (int index = 0; index <= 7; index++) {
@@ -358,11 +361,11 @@ class WeatherModel {
       if (tmp == '-0') tmp = '0';
 
       nfs.add(
-        NearFutureModel(
+        NearFutureTimesModel(
             id: (item['weather'][0]['id']).toString(), temp: tmp, dtTxt: dt),
       );
     }
-    this.nearFutures = nfs;
+    nearFutureTimes = nfs;
 
     _forecastDataConsolidation(forecastData);
   }
@@ -391,45 +394,45 @@ class WeatherModel {
 
     List<NextDayModel> nds = [];
 
-    List<Map<String, dynamic>> _idArray = [];
-    double _temperatureMin = 1000;
-    double _temperatureMax = -1000;
-    double _temperatureTotal = 0;
-    int _temperatureCount = 0;
+    List<Map<String, dynamic>> idArray = [];
+    double temperatureMin = 1000;
+    double temperatureMax = -1000;
+    double temperatureTotal = 0;
+    int temperatureCount = 0;
 
-    int _len = forecastDataList.length;
+    int len = forecastDataList.length;
 
-    for (int i = 0; i < _len; i++) {
+    for (int i = 0; i < len; i++) {
       if (double.parse(forecastDataList[i]['main']['temp_min'].toString()) <
-          _temperatureMin) {
-        _temperatureMin =
+          temperatureMin) {
+        temperatureMin =
             double.parse(forecastDataList[i]['main']['temp_min'].toString());
       }
 
       if (double.parse(forecastDataList[i]['main']['temp_max'].toString()) >
-          _temperatureMax) {
-        _temperatureMax =
+          temperatureMax) {
+        temperatureMax =
             double.parse(forecastDataList[i]['main']['temp_max'].toString());
       }
 
-      _temperatureTotal = _temperatureTotal +
+      temperatureTotal = temperatureTotal +
           double.parse(forecastDataList[i]['main']['temp'].toString());
 
       _idProcess('PROCESS_ADD',
-          forecastDataList[i]['weather'][0]['id'].toString(), _idArray);
+          forecastDataList[i]['weather'][0]['id'].toString(), idArray);
 
-      _temperatureCount++;
+      temperatureCount++;
 
-      if ((i == _len - 1) ||
+      if ((i == len - 1) ||
           (forecastDataList[i]['dt_txt'].toString().substring(0, 10) !=
               forecastDataList[i + 1]['dt_txt'].toString().substring(0, 10))) {
         NextDayModel nd = NextDayModel();
-        nd.id = _idProcess('PROCESS_DECIDE', '', _idArray);
-        nd.temp = (_temperatureTotal / _temperatureCount).toStringAsFixed(0);
+        nd.id = _idProcess('PROCESS_DECIDE', '', idArray);
+        nd.temp = (temperatureTotal / temperatureCount).toStringAsFixed(0);
         if (nd.temp == '-0') nd.temp = '0';
-        nd.tempMin = _temperatureMin.toStringAsFixed(0);
+        nd.tempMin = temperatureMin.toStringAsFixed(0);
         if (nd.tempMin == '-0') nd.tempMin = '0';
-        nd.tempMax = _temperatureMax.toStringAsFixed(0);
+        nd.tempMax = temperatureMax.toStringAsFixed(0);
         if (nd.tempMax == '-0') nd.tempMax = '0';
 
         DateTime date =
@@ -441,14 +444,14 @@ class WeatherModel {
           nds.add(nd);
         }
 
-        _idArray = [];
-        _temperatureMin = 1000;
-        _temperatureMax = -1000;
-        _temperatureTotal = 0;
-        _temperatureCount = 0;
+        idArray = [];
+        temperatureMin = 1000;
+        temperatureMax = -1000;
+        temperatureTotal = 0;
+        temperatureCount = 0;
       }
     }
-    this.nextDays = nds;
+    nextDays = nds;
   }
 
   String? _idProcess(String processType, String id, List idArray) {
@@ -508,5 +511,7 @@ class WeatherModel {
         return outMap['id'];
       }
     }
+
+    return '';
   }
 }

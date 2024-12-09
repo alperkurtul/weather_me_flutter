@@ -1,9 +1,9 @@
-class NearFutureModel {
+class NearFutureTimesModel {
   String id;
   String temp;
   String dtTxt;
 
-  NearFutureModel({
+  NearFutureTimesModel({
     required this.id,
     required this.temp,
     required this.dtTxt,

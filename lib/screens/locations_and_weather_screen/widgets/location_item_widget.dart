@@ -5,12 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_me_flutter/states/locations.dart';
 
-class LocationItem extends StatelessWidget {
+class LocationItemWidget extends StatelessWidget {
   final String? locationName;
   final int? locationIndex;
   final bool selected;
 
-  LocationItem({this.locationName, this.locationIndex, this.selected = false});
+  const LocationItemWidget(
+      {super.key,
+      this.locationName,
+      this.locationIndex,
+      this.selected = false});
 
   @override
   Widget build(BuildContext context) {

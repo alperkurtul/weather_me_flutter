@@ -120,14 +120,14 @@ XCODE ==> Runner ==> General
   - "Update the app's build and version numbers" , 
   - "Create an app bundle" , 
   - "Upload the app bundle to App Store Connect" : 3. method => which is 'Or open build/ios/archive/MyApp.xcarchive in Xcode.'
-
-- version: 1.2.9
-- /Users/alperkurtul/development/flutter_macos_arm64_3.27.1-stable/bin/flutter clean
-- /Users/alperkurtul/development/flutter_macos_arm64_3.27.1-stable/bin/flutter build ipa
 -
 - Open build/ios/archive/MyApp.xcarchive in Xcode.  ==> DONOT DO THIS
 - DO THIS ==> Open Xcode. Then Open weather_me_flutter/ios. After that, open menu item  Product >> Archive
 - First, Validate App. Then, Distribute App.
+
+- version: 1.2.9
+- /Users/alperkurtul/development/flutter_macos_arm64_3.27.1-stable/bin/flutter clean
+- /Users/alperkurtul/development/flutter_macos_arm64_3.27.1-stable/bin/flutter build ipa
 ```
 
 ## Build Android app for deployment
@@ -135,10 +135,10 @@ XCODE ==> Runner ==> General
 ```
 - See the page: https://docs.flutter.dev/deployment/android
 - Read title, "Build an app bundle"
+-
+- Upload the file "build/app/outputs/bundle/release/app-release.aab" to Google Play Console
 
 - version: 1.2.9+16
 - /Users/alperkurtul/development/flutter_macos_arm64_3.27.1-stable/bin/flutter clean
 - /Users/alperkurtul/development/flutter_macos_arm64_3.27.1-stable/bin/flutter build appbundle
--
-- Upload the file "build/app/outputs/bundle/release/app-release.aab" to Google Play Console
 ```

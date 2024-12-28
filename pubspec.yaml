@@ -20,11 +20,13 @@ version: 1.2.9+16
 
 # 01) STABLE WITH flutter version "flutter_macos_arm64_3.13.9-stable" between ??-??-???? and 07-04-2024
 # 02) STABLE WITH flutter version "flutter_macos_arm64_3.19.5-stable" between 07-04-2024 and 07-12-2024
-# CURRENT => STABLE WITH flutter version "flutter_macos_arm64_3.24.5-stable" between 07-12-2024 and ??-??-????
+# 03) STABLE WITH flutter version "flutter_macos_arm64_3.24.5-stable" between 07-12-2024 and 28-12-2024
+# CURRENT => STABLE WITH flutter version "flutter_macos_arm64_3.27.1-stable" between 28-12-2024 and ??-??-????
 environment:
   # 01) sdk: '>=3.1.5 <4.0.0'  # "for flutter_macos_arm64_3.13.9-stable" between ??-??-???? and 07-04-2024
   # 02) sdk: '>=3.3.3 <4.0.0'  # "for flutter_macos_arm64_3.19.5-stable" between 07-04-2024 and 07-12-2024
-  sdk: ^3.5.4  # "for flutter_macos_arm64_3.24.5-stable" between 07-12-2024 and ??-??-????
+  # 03) sdk: ^3.5.4  # "for flutter_macos_arm64_3.24.5-stable" between 07-12-2024 and 28-12-2024
+  sdk: ^3.6.0  # "for flutter_macos_arm64_3.27.1-stable" between 28-12-2024 and ??-??-????
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions

@@ -125,7 +125,7 @@ XCODE ==> Runner ==> General
 - DO THIS ==> Open Xcode. Then Open weather_me_flutter/ios. After that, open menu item  Product >> Archive
 - First, Validate App. Then, Distribute App.
 
-- version: 1.2.9
+- version: 1.2.10
 - /Users/alperkurtul/development/flutter_macos_arm64_3.27.1-stable/bin/flutter clean
 - /Users/alperkurtul/development/flutter_macos_arm64_3.27.1-stable/bin/flutter build ipa
 ```
@@ -138,7 +138,7 @@ XCODE ==> Runner ==> General
 -
 - Upload the file "build/app/outputs/bundle/release/app-release.aab" to Google Play Console
 
-- version: 1.2.9+16
+- version: 1.2.10+17
 - /Users/alperkurtul/development/flutter_macos_arm64_3.27.1-stable/bin/flutter clean
 - /Users/alperkurtul/development/flutter_macos_arm64_3.27.1-stable/bin/flutter build appbundle
 ```

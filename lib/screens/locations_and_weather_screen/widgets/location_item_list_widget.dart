@@ -58,7 +58,7 @@ class _LocationItemListWidgetState extends State<LocationItemListWidget> {
         duration: Duration(milliseconds: 1500));
   }
 
-  void deleteLocationFromAnimatedList(var removedItem, int index) {
+  void deleteLocationFromAnimatedList(dynamic removedItem, int index) {
     listKey.currentState!.removeItem(
       index,
       (context, animation) {
